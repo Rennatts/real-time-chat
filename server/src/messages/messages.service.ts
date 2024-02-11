@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMessageDto } from './dto/create-message.dto';
-import { UpdateMessageDto } from './dto/update-message.dto';
 import { Message } from './entities/message.entity';
+import { ChatRoom } from './entities/chatRoom.entity';
+import { CreateChatRoomDto } from './dto/create-chatRoom.dto';
 
 @Injectable()
 export class MessagesService {
   messages: Message[] = [{ name: 'Carla', text: 'Hi guys!!'}]
   clientToUser = {};
-  rooms = new Map<string, { name: string, description: string }>();
+  rooms: ChatRoom[] = [{roomId: '00001', name: 'chat01', description: 'first group'}]
 
   identify(name: string, clientId: string){
     this.clientToUser[clientId] = name;
@@ -29,20 +30,21 @@ export class MessagesService {
     return this.messages
   }
 
-  createRoom(name: string, description: string) {
+  createRoom(createChatRoomDto: CreateChatRoomDto) {
     const roomId = Math.random().toString(36).substring(7); 
-    const room = { name, description };
-    this.rooms.set(roomId, room);
+    const room = {...createChatRoomDto, roomId}
+    console.log("room", room)
+    this.rooms.push(room)
     return room;
   }
 
   getRooms() {
-    return Array.from(this.rooms.values());
+    return this.rooms
   }
 
-  getRoomById(roomId: string) {
-    return this.rooms.get(roomId);
-  }
+  // getRoomById(roomId: string) {
+  //   return this.rooms.get(roomId);
+  // }
 
   searchRooms(query: string) {
     const lowercaseQuery = query.toLowerCase();

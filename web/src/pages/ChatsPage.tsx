@@ -7,7 +7,6 @@ const socket = io('http://localhost:4000');
 
 function ChatsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [newChatRoom, setNewChatRoom] = useState<{chatRoomName: string, chatRoomDescription: string}[]>();
     const [chats, setChats] = useState<{name: string, description: string}[]>([]);
 
     const handleOpenModal = () => setIsModalOpen(true);
@@ -19,15 +18,18 @@ function ChatsPage() {
       });
 
       const handleNewChatRoom = (newChat: any) => {
+        console.log("New chat room received:", newChat);
         setChats((chats) => [...chats, newChat]);
       };
-
-      socket.on('createRoom', handleNewChatRoom);
-
+    
+      socket.on('newChatRoom', handleNewChatRoom);
+    
       return () => {
-          socket.off('createRoom', handleNewChatRoom);
+        socket.off('newChatRoom', handleNewChatRoom);
       };
     }, []);
+
+    console.log("chats", chats)
 
     const createChatRoom = (formData: { chatRoomName: string; chatRoomDescription: string }) => {
       if(formData.chatRoomName && formData.chatRoomDescription){ 
