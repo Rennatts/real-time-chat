@@ -18,6 +18,7 @@ export class MessagesGateway {
   @SubscribeMessage('createMessage')
   async create(@MessageBody() createMessageDto: CreateMessageDto) {
     const message = await this.messagesService.create(createMessageDto);
+    console.log("message", message)
 
     this.server.emit('message', message);
 
@@ -36,6 +37,31 @@ export class MessagesGateway {
       return this.messagesService.identify(name, client.id)
   }
 
+  @SubscribeMessage('createRoom')
+  createRoom(
+    @MessageBody() roomData: { name: string, description: string }, 
+    @ConnectedSocket() client: Socket) {
+      const { name, description } = roomData;
+      const room = this.messagesService.createRoom(name, description);
+      return room;
+  }
+
+  // @SubscribeMessage('joinRoom')
+  // joinRoom(
+  //   @MessageBody() roomName: string, 
+  //   @ConnectedSocket() client: Socket) {
+  //     client.join(roomName);
+  //     return `Joined room ${roomName}`;
+  // }
+
+  @SubscribeMessage('leaveRoom')
+  leaveRoom(
+    @MessageBody() roomName: string, 
+    @ConnectedSocket() client: Socket) {
+      client.leave(roomName);
+      return `Left room ${roomName}`;
+  }
+
   @SubscribeMessage('typing')
   async typing(
     @MessageBody('isTyping') isTyping: boolean, 
@@ -43,5 +69,10 @@ export class MessagesGateway {
       const name = await this.messagesService.getClientByName(client.id)
 
       client.broadcast.emit('typing', { name, isTyping })
+  }
+
+  @SubscribeMessage('searchRooms')
+  searchRooms(@MessageBody() query: string) {
+    return this.messagesService.searchRooms(query);
   }
 }

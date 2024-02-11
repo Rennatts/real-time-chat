@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useUserContext } from '../context/userContext';
 import { useNavigate } from 'react-router-dom';
+
+
 import Button from '../components/common/Button';
+import Chat from '../components/chat/Chat';
 
 export default function HomePage() {
   const { accessToken, userData } = useUserContext();
@@ -42,6 +45,7 @@ export default function HomePage() {
           </div>
         )
       }
+      <Chat></Chat>
     </div>
   )
 }

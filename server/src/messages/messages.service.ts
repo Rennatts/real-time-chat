@@ -7,6 +7,7 @@ import { Message } from './entities/message.entity';
 export class MessagesService {
   messages: Message[] = [{ name: 'Carla', text: 'Hi guys!!'}]
   clientToUser = {};
+  rooms = new Map<string, { name: string, description: string }>();
 
   identify(name: string, clientId: string){
     this.clientToUser[clientId] = name;
@@ -26,6 +27,29 @@ export class MessagesService {
 
   findAll() {
     return this.messages
+  }
+
+  createRoom(name: string, description: string) {
+    const roomId = Math.random().toString(36).substring(7); 
+    const room = { name, description };
+    this.rooms.set(roomId, room);
+    return room;
+  }
+
+  getRooms() {
+    return Array.from(this.rooms.values());
+  }
+
+  getRoomById(roomId: string) {
+    return this.rooms.get(roomId);
+  }
+
+  searchRooms(query: string) {
+    const lowercaseQuery = query.toLowerCase();
+    return Array.from(this.rooms.values()).filter(room =>
+      room.name.toLowerCase().includes(lowercaseQuery) ||
+      room.description.toLowerCase().includes(lowercaseQuery)
+    );
   }
 
 }
