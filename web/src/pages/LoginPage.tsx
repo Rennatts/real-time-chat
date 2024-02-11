@@ -11,29 +11,27 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Button from '../components/common/Button';
+import { useLoginUser } from '../hooks/useLoginUser';
 
 function LoginPage() {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+  const { loginUser, loading, error: loginError } = useLoginUser(); 
   const [error, setError] = useState<string>('');
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); 
+    event.preventDefault();
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;
 
     if (email && password) {
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        console.log('User logged in successfully');
-      } catch (error: any) { 
-        setError(error.message || "An unknown error occurred");
-        console.error("Error logging in: ", error.message);
-      }
+      await loginUser(email, password); 
     } else {
       setError("Please enter both email and password.");
     }
   };
+
+  const displayError = error || loginError;
 
   return (
     <Container component="main" maxWidth="xs">
@@ -76,15 +74,16 @@ function LoginPage() {
             inputRef={passwordRef}
           />
           <Button
-            text="Login"
+            text={loading ? "Logging in..." : "Login"}
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            disabled={loading}
           ></Button>
-          {error && (
+          {displayError && (
             <Typography color="error" align="center">
-              {error}
+              {displayError}
             </Typography>
           )}
           <Grid container>
@@ -99,5 +98,6 @@ function LoginPage() {
     </Container>
   );
 }
+
 
 export default LoginPage;

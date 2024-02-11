@@ -15,14 +15,14 @@ export default function HomePage() {
 
   },[accessToken]);
 
-  console.log("-----", userData, "-----")
+  //console.log("-----", accessToken, "-----")
 
 
   return (
     <div>
       HomePage
       {
-        userLoggedIn ? (<p>hello { userData.name }</p>) : 
+        userLoggedIn ? (<p>hello {userData.name }</p>) : 
         (
           <div>
             <div>

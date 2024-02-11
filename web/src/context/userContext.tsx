@@ -39,6 +39,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         const userRef = ref(db, `users/${user.uid}`);
         onValue(userRef, (snapshot) => {
           const data = snapshot.val();
+          console.log("DDDDDDD", data, "DDDDD")
           if (data) {
             setUserData({
               name: data.name,

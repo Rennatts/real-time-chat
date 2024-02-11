@@ -15,6 +15,8 @@ function Header() {
 
   },[accessToken]);
 
+  console.log("userData", userData)
+
   return (
     <div>Header
       {userLoggedIn ? 

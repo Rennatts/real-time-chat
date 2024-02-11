@@ -25,9 +25,11 @@ export const useSignUpUser = () => {
   
       const token = await user.getIdToken();
       setAccessToken(token);
+
+      setLoading(false); 
   
       navigate('/');
-      setLoading(false); 
+    
     } catch (error) {
       console.error("Error signing up:", error);
       setError('An unexpected error occurred.');
