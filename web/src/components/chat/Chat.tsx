@@ -3,10 +3,19 @@ import io from 'socket.io-client';
 
 const socket = io('http://localhost:4000');
 
-function Chat() {
+interface UserData {
+    name?: string;
+    email?: string;
+    id?: string;
+}
+
+type ChatProps = {
+    userData: UserData; 
+};
+
+function Chat({ userData }: ChatProps) {
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState<{name: string, text: string}[]>([]);
-
 
     useEffect(() => {
         socket.on('connect', () => {
@@ -23,13 +32,11 @@ function Chat() {
             socket.off('message', handleNewMessage);
         };
     }, []);
-    
-    
 
     const sendMessage = (event: any) => {
         event.preventDefault();
         if (message) {
-            socket.emit('createMessage', { name: 'fulano', text: message }); 
+            socket.emit('createMessage', { name: userData.name, text: message }); 
             setMessage('');
         }
     };
@@ -40,8 +47,6 @@ function Chat() {
             setMessages(fetchedMessages);
         });
     };
-
-    console.log("message", message)
 
     return (
         <div>

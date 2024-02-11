@@ -12,20 +12,22 @@ export default function HomePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(accessToken){
-      setUserLoggedIn(true)
-    }
-
-  },[accessToken]);
-
-  //console.log("-----", accessToken, "-----")
-
+    setUserLoggedIn(accessToken !== null);
+  }, [accessToken]); 
+  
 
   return (
     <div>
       HomePage
       {
-        userLoggedIn ? (<p>hello {userData.name }</p>) : 
+        userLoggedIn ? 
+        (
+          <div>
+              <p>hello {userData.name }</p>
+              <Chat userData={userData}></Chat>
+          </div>
+        )
+        : 
         (
           <div>
             <div>
@@ -45,7 +47,6 @@ export default function HomePage() {
           </div>
         )
       }
-      <Chat></Chat>
     </div>
   )
 }
