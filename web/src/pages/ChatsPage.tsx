@@ -7,7 +7,7 @@ const socket = io('http://localhost:4000');
 
 function ChatsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [chats, setChats] = useState<{name: string, description: string}[]>([]);
+    const [chats, setChats] = useState<{roomId: string, name: string, description: string}[]>([]);
 
     const handleOpenModal = () => setIsModalOpen(true);
     const handleCloseModal = () => setIsModalOpen(false);
@@ -18,7 +18,6 @@ function ChatsPage() {
       });
 
       const handleNewChatRoom = (newChat: any) => {
-        console.log("New chat room received:", newChat);
         setChats((chats) => [...chats, newChat]);
       };
     
@@ -29,6 +28,25 @@ function ChatsPage() {
       };
     }, []);
 
+    useEffect(() => {
+      socket.on('connect', () => {
+        console.log('Connected to server');
+      });
+
+      socket.on('roomJoined', (data) => {
+        console.log('Data received:', data);
+      });
+      
+      // socket.on('roomJoined', (data) => {
+      //   console.log(`Joined room: ${data.roomId}`);
+      // });
+    
+      return () => {
+        socket.off('roomJoined');
+      };
+    }, []);
+    
+
     console.log("chats", chats)
 
     const createChatRoom = (formData: { chatRoomName: string; chatRoomDescription: string }) => {
@@ -38,16 +56,23 @@ function ChatsPage() {
     };
 
 
+    const handleJoinChat = (roomId: any) => {
+      socket.emit('joinRoom', { roomId });
+    };
+  
 
     return (
       <div>
         <Header onClick={handleOpenModal} isOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
         ChatsPage
         <ul>
-            {chats.map((chat, index) => (
-                <li key={index}>{chat.name}: {chat.description}</li>
-            ))}
+          {chats.map((chat, index) => (
+            <li key={index} onClick={() => handleJoinChat(chat.roomId)}>
+              {chat.name}: {chat.description}
+            </li>
+          ))}
         </ul>
+
         <CreateChatRoom isOpen={isModalOpen} onClose={handleCloseModal} onSubmit={createChatRoom} />
       </div>
     )

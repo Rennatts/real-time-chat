@@ -9,6 +9,8 @@ export class MessagesService {
   messages: Message[] = [{ name: 'Carla', text: 'Hi guys!!'}]
   clientToUser = {};
   rooms: ChatRoom[] = [{roomId: '00001', name: 'chat01', description: 'first group'}]
+  private roomParticipants: { [roomId: string]: Set<string> } = {};
+
 
   identify(name: string, clientId: string){
     this.clientToUser[clientId] = name;
@@ -41,6 +43,35 @@ export class MessagesService {
   getRooms() {
     return this.rooms
   }
+
+  joinRoom(roomId: string, clientId: string): string {
+    const room = this.rooms.find(room => room.roomId === roomId);
+    if (!room) {
+        throw new Error('Room does not exist');
+    }
+
+    // Initialize the room in the roomParticipants object if it doesn't already exist
+    if (!this.roomParticipants[roomId]) {
+      this.roomParticipants[roomId] = new Set();
+    }
+
+    // Check if the client is already in the room
+    if (this.roomParticipants[roomId].has(clientId)) {
+      throw new Error('User is already in the room');
+    }
+
+    this.roomParticipants[roomId].add(clientId);
+
+    return roomId;
+  }
+
+  leaveRoom(roomId: string, clientId: string) {
+    if (this.roomParticipants[roomId]) {
+        this.roomParticipants[roomId].delete(clientId);
+    }
+  }
+
+
 
   // getRoomById(roomId: string) {
   //   return this.rooms.get(roomId);

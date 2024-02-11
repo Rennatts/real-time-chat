@@ -1,4 +1,4 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, ConnectedSocket } from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, ConnectedSocket, WsException } from '@nestjs/websockets';
 import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { Server, Socket } from 'socket.io';
@@ -29,11 +29,17 @@ export class MessagesGateway {
     return this.messagesService.findAll();
   }
 
-  @SubscribeMessage('join')
-  joinRoom(
-    @MessageBody('name') name: string, 
-    @ConnectedSocket() client: Socket){
-      return this.messagesService.identify(name, client.id)
+  @SubscribeMessage('joinRoom')
+  async joinRoom(
+    @MessageBody('roomId') roomId: string, 
+    @ConnectedSocket() client: Socket) {
+    try {
+        const result = await this.messagesService.joinRoom(roomId, client.id);
+        client.join(roomId);
+        return { event: 'roomJoined', roomId: result };
+    } catch (error) {
+        throw new WsException(error.message);
+    }
   }
 
 
@@ -46,19 +52,20 @@ export class MessagesGateway {
       return room;
   }
 
+  @SubscribeMessage('sendMessageToRoom')
+  sendMessageToRoom(
+      @MessageBody() data: { roomId: string; message: string }, 
+      @ConnectedSocket() client: Socket) {
+      this.server.to(data.roomId).emit('messageFromRoom', data.message);
+  }
+
+
 
   @SubscribeMessage('findAllChatRooms')
   getRooms() {
     return this.messagesService.getRooms();
   }
 
-  // @SubscribeMessage('joinRoom')
-  // joinRoom(
-  //   @MessageBody() roomName: string, 
-  //   @ConnectedSocket() client: Socket) {
-  //     client.join(roomName);
-  //     return `Joined room ${roomName}`;
-  // }
 
   @SubscribeMessage('leaveRoom')
   leaveRoom(
