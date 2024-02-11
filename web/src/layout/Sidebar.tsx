@@ -17,9 +17,11 @@ import AccessAlarmIcon from '@mui/icons-material/NavigateNextSharp';
 import { useLogoutUser } from '../hooks/useLogoutUser';
 import { useUserContext } from '../context/userContext';
 import Styled from './Sidebar.Styles';
+import { useNavigate } from 'react-router-dom';
 
 export default function Sidebar() {
     const { accessToken, userData } = useUserContext();
+    const navigate = useNavigate();
     const logoutUser = useLogoutUser();
   
     const userLoggedIn = !!accessToken;
@@ -50,11 +52,11 @@ export default function Sidebar() {
         >
         <List>
             <ListItem disablePadding>
-                <ListItemButton>
-                <ListItemIcon>
-                    <PiChatsCircle size={25}/>
-                </ListItemIcon>
-                <ListItemText primary={'Chats'} />
+                <ListItemButton onClick={()=> navigate('/chats')}>
+                    <ListItemIcon>
+                        <PiChatsCircle size={25}/>
+                    </ListItemIcon>
+                    <ListItemText primary={'Chats'} />
                 </ListItemButton>
             </ListItem>
             <ListItem disablePadding>

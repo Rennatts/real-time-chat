@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage';
 import SignupPage from "./pages/SignupPage";
 import './App.css';
 import Sidebar from "./layout/Sidebar";
+import ChatsPage from './pages/ChatsPage';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
+              <Route path="/chats" element={<ChatsPage />} />
             </Routes>
           </div>
         </div>

@@ -7,7 +7,7 @@ interface CustomButtonProps {
 
 
 const Button = styled(MuiButton)<CustomButtonProps>`
-    background-color: ${props => props.customColor || 'blue'} !important; 
+    background-color: ${props => props.customColor || '#364156'} !important; 
     color: white !important;
     padding: 10px 20px !important;
     border-radius: 3px !important;

@@ -125,7 +125,4 @@ function SignupPage() {
 }
 
 export default SignupPage;
-function signUpUser(email: string, password: string, name: void) {
-  throw new Error('Function not implemented.');
-}
 
