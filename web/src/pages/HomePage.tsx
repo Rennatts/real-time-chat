@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../components/common/Button';
 
 export default function HomePage() {
-  const { accessToken } = useUserContext();
+  const { accessToken, userData } = useUserContext();
   const [userLoggedIn, setUserLoggedIn] = useState(false)
   const navigate = useNavigate();
 
@@ -15,12 +15,14 @@ export default function HomePage() {
 
   },[accessToken]);
 
+  console.log("-----", userData, "-----")
+
 
   return (
     <div>
       HomePage
       {
-        userLoggedIn ? (<p>hello user</p>) : 
+        userLoggedIn ? (<p>hello { userData.name }</p>) : 
         (
           <div>
             <div>

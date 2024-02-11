@@ -1,6 +1,4 @@
 import React, { useRef, useState } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../services/firebase';
 import { useUserContext } from '../context/userContext';
 import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
@@ -13,6 +11,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Button from '../components/common/Button';
+import { useSignUpUser } from '../hooks/useSignupUser'; 
 
 function SignupPage() {
   const emailRef = useRef<HTMLInputElement>(null);
@@ -22,35 +21,32 @@ function SignupPage() {
   const { setAccessToken } = useUserContext();
   const navigate = useNavigate();
 
+  const { signUpUser, loading, error: signUpError } = useSignUpUser();
+
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError('');
-
+  
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;
-
-    if (email && password) {
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        
-        if(userCredential.user !== undefined){
-          console.log("userCredential", userCredential)
-          const token = await userCredential.user.getIdToken();
-  
-          setAccessToken(token);
-          navigate('/');
-        }
-      } catch (error) {
-        if (error instanceof Error) setError(error.message);
-      }
-    } else {
-      setError('Please fill in all fields.');
+    const name = nameRef.current?.value; 
+    if (email && password && name) {
+      signUpUser(email, password, name); 
     }
   };
+
+  const displayError = error || signUpError;
+  
 
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
+      {displayError && (
+        <Typography color="error" align="center">
+          {displayError}
+        </Typography>
+      )}
       <Box
         sx={{
           marginTop: 8,
@@ -129,3 +125,7 @@ function SignupPage() {
 }
 
 export default SignupPage;
+function signUpUser(email: string, password: string, name: void) {
+  throw new Error('Function not implemented.');
+}
+
