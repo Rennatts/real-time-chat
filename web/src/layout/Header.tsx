@@ -5,17 +5,31 @@ import { useLogoutUser } from '../hooks/useLogoutUser'
 import { BiMessageRoundedAdd } from "react-icons/bi";
 import Styled from './Header.Styles';
 
-function Header() {
+interface HeaderProps {
+    onClick: () => void;
+    isOpen: boolean;
+    setIsModalOpen: (isOpen: boolean) => void;
+}
+
+function Header( { onClick, isOpen, setIsModalOpen }: HeaderProps) {
   const { accessToken, userData } = useUserContext();
   const logoutUser = useLogoutUser();
 
   const userLoggedIn = !!accessToken;
 
+
+  const openModal = () => {
+    setIsModalOpen(!isOpen)
+  }
+
   return (
     <Styled.Container>
         {userLoggedIn ? 
-            (<Button>
-                <BiMessageRoundedAdd size={30} style={{ color: 'white' }}/>
+            (<Button onClick={openModal}>
+                <BiMessageRoundedAdd 
+                size={30} 
+                style={{ color: 'white' }}
+                />
             </Button>) 
             : 
             (<></>)
