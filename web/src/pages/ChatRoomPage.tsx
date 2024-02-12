@@ -1,30 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import io from 'socket.io-client';
+// import io from 'socket.io-client';
+import GenericChat from '../components/chat/GenericChat';
+import { useUserContext } from '../context/userContext';
 
-const socket = io('http://localhost:4000');
 
 function ChatRoomPage() {
+    const { userData } = useUserContext();
     let { roomId } = useParams();
     console.log("roomId", roomId)
 
-    useEffect(() => {
-        socket.on('messageFromRoom', (message) => {
-          // Update your state or UI with the new message
-          console.log("New message:", message);
-        });
-
-        return () => {
-            socket.off('messageFromRoom');
-        };
-    }, []);
-
-    const sendMessage = (message: any) => {
-        socket.emit('sendMessageToRoom', { roomId: roomId, message });
-    };
+      
 
     return (
-        <div>ChatRoom number {roomId}</div>
+        <div>ChatRoom number {roomId}
+        <GenericChat userData={userData} roomId={roomId!}/>
+        </div>
     )
 }
 

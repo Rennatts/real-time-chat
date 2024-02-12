@@ -1,4 +1,6 @@
 export class Message {
-    name: string;
+    senderName: string;
+    senderId: string;
     text: string
+    roomId: string;
 }

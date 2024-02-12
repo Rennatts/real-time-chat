@@ -3,12 +3,13 @@ import { CreateMessageDto } from './dto/create-message.dto';
 import { Message } from './entities/message.entity';
 import { ChatRoom } from './entities/chatRoom.entity';
 import { CreateChatRoomDto } from './dto/create-chatRoom.dto';
+import { SendMessageToChatRoomDto } from './dto/send-message-chatRoom.dto';
 
 @Injectable()
 export class MessagesService {
-  messages: Message[] = [{ name: 'Carla', text: 'Hi guys!!'}]
+  messages: Message[] = []
   clientToUser = {};
-  rooms: ChatRoom[] = [{roomId: '00001', name: 'chat01', description: 'first group'}]
+  rooms: ChatRoom[] = []
   private roomParticipants: { [roomId: string]: Set<string> } = {};
 
 
@@ -34,10 +35,15 @@ export class MessagesService {
 
   createRoom(createChatRoomDto: CreateChatRoomDto) {
     const roomId = Math.random().toString(36).substring(7); 
-    const room = {...createChatRoomDto, roomId}
-    this.rooms.push(room)
+    const room: ChatRoom = {
+        ...createChatRoomDto,
+        roomId,
+        messages: [] 
+    };
+    this.rooms.push(room);
     return room;
   }
+
 
   getRooms() {
     return this.rooms
@@ -45,7 +51,6 @@ export class MessagesService {
 
   joinRoom(roomId: string, clientId: string): string {
     const room = this.rooms.find(room => room.roomId === roomId);
-    //console.log("---room----", room)
     if (!room) {
         throw new Error('Room does not exist');
     }
@@ -72,10 +77,9 @@ export class MessagesService {
   }
 
 
-
-  // getRoomById(roomId: string) {
-  //   return this.rooms.get(roomId);
-  // }
+  findRoomById(roomId: string): ChatRoom | undefined {
+    return this.rooms.find(room => room.roomId === roomId);
+  }  
 
   searchRooms(query: string) {
     const lowercaseQuery = query.toLowerCase();
@@ -84,5 +88,24 @@ export class MessagesService {
       room.description.toLowerCase().includes(lowercaseQuery)
     );
   }
+
+
+  sendMessageToRoom(sendMessageToChatRoomDto: SendMessageToChatRoomDto): Message {
+    const room = this.rooms.find(room => room.roomId === sendMessageToChatRoomDto.roomId);
+    if (!room) {
+        throw new Error('Room does not exist');
+    }
+    const newMessage: Message = {
+      senderId: sendMessageToChatRoomDto.senderId,
+      senderName: sendMessageToChatRoomDto.senderName, 
+      text: sendMessageToChatRoomDto.message,
+      roomId: sendMessageToChatRoomDto.roomId
+    };
+
+    room.messages.push(newMessage);
+    return newMessage; 
+  }
+
+
 
 }

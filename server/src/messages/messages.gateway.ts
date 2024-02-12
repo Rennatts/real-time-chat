@@ -3,6 +3,7 @@ import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { Server, Socket } from 'socket.io';
 import { CreateChatRoomDto } from './dto/create-chatRoom.dto';
+import { SendMessageToChatRoomDto } from './dto/send-message-chatRoom.dto';
 
 @WebSocketGateway({
   cors: {
@@ -36,10 +37,27 @@ export class MessagesGateway {
     try {
         const result = await this.messagesService.joinRoom(roomId, client.id);
         client.join(roomId);
+        console.log(`Client ${client.id} joined room ${roomId}`);
+
         this.server.emit('roomJoined', { roomId: result });
         return result;
     } catch (error) {
         throw new WsException(error.message);
+    }
+  }
+
+
+  @SubscribeMessage('sendMessageToRoom')
+  async sendMessageToRoom(
+    @MessageBody() sendMessageToChatRoomDto: SendMessageToChatRoomDto,
+    @ConnectedSocket() client: Socket
+  ) {
+    //TODO: save the message to the database
+
+    const message = await this.messagesService.sendMessageToRoom(sendMessageToChatRoomDto);
+
+    if(message){
+      this.server.to(sendMessageToChatRoomDto.roomId).emit('messageFromRoom', message);
     }
   }
 
@@ -53,12 +71,12 @@ export class MessagesGateway {
       return room;
   }
 
-  @SubscribeMessage('sendMessageToRoom')
-  sendMessageToRoom(
-      @MessageBody() data: { roomId: string; message: string }, 
-      @ConnectedSocket() client: Socket) {
-      this.server.to(data.roomId).emit('messageFromRoom', data.message);
-  }
+  // @SubscribeMessage('sendMessageToRoom')
+  // sendMessageToRoom(
+  //     @MessageBody() data: { roomId: string; message: string }, 
+  //     @ConnectedSocket() client: Socket) {
+  //     this.server.to(data.roomId).emit('messageFromRoom', data.message);
+  // }
 
 
 

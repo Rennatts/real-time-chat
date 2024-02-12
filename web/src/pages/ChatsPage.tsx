@@ -1,21 +1,22 @@
 import { useEffect, useState } from 'react';
-import io from 'socket.io-client';
 import Header from '../layout/Header'
 import CreateChatRoom from '../components/CreateChatRoom/CreateChatRoom';
 import { useNavigate } from 'react-router-dom';
+import { useSocket } from '../context/socketContext';
 
-
-const socket = io('http://localhost:4000');
 
 function ChatsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [chats, setChats] = useState<{roomId: string, name: string, description: string}[]>([]);
     const navigate = useNavigate();
+    const socket = useSocket(); 
 
     const handleOpenModal = () => setIsModalOpen(true);
     const handleCloseModal = () => setIsModalOpen(false);
 
     useEffect(() => {
+      if (socket == null) return; 
+
       socket.on('connect', () => {
           console.log('Connected to server');
       });
@@ -29,9 +30,11 @@ function ChatsPage() {
       return () => {
         socket.off('newChatRoom', handleNewChatRoom);
       };
-    }, []);
+    }, [socket]);
 
     useEffect(() => {
+      if (socket == null) return; 
+      
       socket.on('connect', () => {
         console.log('Connected to server');
       });
@@ -47,7 +50,7 @@ function ChatsPage() {
       return () => {
         socket.off('roomJoined');
       };
-    }, []);
+    }, [socket, navigate]);
     
 
     console.log("chats", chats)
@@ -60,7 +63,7 @@ function ChatsPage() {
 
 
     const handleJoinChat = (roomId: any) => {
-      console.log("--roomId--", roomId)
+      if (socket == null) return; 
       socket.emit('joinRoom', { roomId: roomId });
     };
   
