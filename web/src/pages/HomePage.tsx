@@ -7,15 +7,20 @@ import Button from '../components/common/Button';
 import Chat from '../components/chat/Chat';
 
 export default function HomePage() {
-  const { accessToken, userData } = useUserContext();
-  const [userLoggedIn, setUserLoggedIn] = useState(false)
+  const { accessToken, userData, isLoading } = useUserContext();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    setUserLoggedIn(accessToken !== null);
-  }, [accessToken]); 
-  
+  const userLoggedIn = accessToken !== null
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+
+  console.log("userLoggedIn", userLoggedIn)
+  console.log("accessToken", accessToken)
+
+  
   return (
     <div>
       HomePage

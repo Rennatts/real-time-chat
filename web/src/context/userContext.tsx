@@ -13,6 +13,7 @@ interface UserContextType {
   setAccessToken: (token: string | null) => void;
   userData: UserData;
   setUserData: (data: UserData) => void;
+  isLoading: boolean;
 }
 
 export const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -28,10 +29,12 @@ export const useUserContext = () => {
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [userData, setUserData] = useState<UserData>({});
+  const [isLoading, setIsLoading] = useState(true); 
 
   useEffect(() => {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
+      console.log("user", user)
       if (user) {
         setAccessToken(user.refreshToken);
   
@@ -39,7 +42,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         const userRef = ref(db, `users/${user.uid}`);
         onValue(userRef, (snapshot) => {
           const data = snapshot.val();
-          console.log("DDDDDDD", data, "DDDDD")
           if (data) {
             setUserData({
               name: data.name,
@@ -47,19 +49,28 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
               id: user.uid,
             });
           }
+          setIsLoading(false);
         }, {
           onlyOnce: true 
         });
       } else {
         setAccessToken(null);
         setUserData({});
+        setIsLoading(false);
       }
     });
   }, []);
   
 
   return (
-    <UserContext.Provider  value={{ accessToken, setAccessToken, userData, setUserData }}>
+    <UserContext.Provider  
+      value={{ 
+        accessToken, 
+        setAccessToken, 
+        userData, 
+        setUserData, 
+        isLoading 
+      }}>
       {children}
     </UserContext.Provider>
   );
