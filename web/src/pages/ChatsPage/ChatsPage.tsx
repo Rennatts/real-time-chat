@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
-import Header from '../layout/Header'
-import CreateChatRoom from '../components/CreateChatRoom/CreateChatRoom';
+import Header from '../../layout/Header'
+import CreateChatRoom from '../../components/CreateChatRoom/CreateChatRoom';
 import { useNavigate } from 'react-router-dom';
-import { useSocket } from '../context/socketContext';
+import { useSocket } from '../../context/socketContext';
+import ChatRoom from '../../components/ChatRoom/ChatRoom';
+import Styles from './ChartsPage.Styles'
+import { Stack } from '@mui/material';
 
 
 function ChatsPage() {
@@ -72,13 +75,13 @@ function ChatsPage() {
       <div>
         <Header onClick={handleOpenModal} isOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
         ChatsPage
-        <ul>
+        <Styles.ChatGrid>
           {chats.map((chat, index) => (
-            <li key={index} onClick={() => handleJoinChat(chat.roomId)}>
-              {chat.name}: {chat.description}
-            </li>
+            <Stack direction="row" spacing={1} key={index} onClick={() => handleJoinChat(chat.roomId)}>
+                <ChatRoom {...chat}></ChatRoom>
+            </Stack>
           ))}
-        </ul>
+        </Styles.ChatGrid>
 
         <CreateChatRoom isOpen={isModalOpen} onClose={handleCloseModal} onSubmit={createChatRoom} />
       </div>

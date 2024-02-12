@@ -4,7 +4,7 @@ import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
 import SignupPage from "./pages/SignupPage";
 import Sidebar from "./layout/Sidebar";
-import ChatsPage from './pages/ChatsPage';
+import ChatsPage from './pages/ChatsPage/ChatsPage';
 
 import './App.css';
 import ChatRoomPage from './pages/ChatRoomPage';
