@@ -1,5 +1,5 @@
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { getDatabase, onValue, ref } from 'firebase/database';
+import { get, getDatabase, onValue, ref } from 'firebase/database';
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 interface UserData {
@@ -26,21 +26,43 @@ export const useUserContext = () => {
   return context;
 };
 
+
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [userData, setUserData] = useState<UserData>({});
+  const [_accessToken, _setAccessToken] = useState<string | null>(null);
+  const [_userData, _setUserData] = useState<UserData>({});
   const [isLoading, setIsLoading] = useState(true); 
+
+
+  const setAccessToken = (token: string | null) => {
+    if (token) {
+      localStorage.setItem('accessToken', token);
+    } else {
+      localStorage.removeItem('accessToken');
+    }
+
+    _setAccessToken(token);
+  };
+  
+  const setUserData = (data: UserData | {}) => {
+    if (data && Object.keys(data).length) {
+      localStorage.setItem('userData', JSON.stringify(data));
+    } else {
+      localStorage.removeItem('userData');
+    }
+
+    _setUserData(data);
+  };
 
   useEffect(() => {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
-      console.log("user", user)
       if (user) {
-        setAccessToken(user.refreshToken);
+        const accessTokenValue = user.refreshToken;
+        setAccessToken(accessTokenValue); 
   
         const db = getDatabase();
         const userRef = ref(db, `users/${user.uid}`);
-        onValue(userRef, (snapshot) => {
+        get(userRef).then((snapshot) => {
           const data = snapshot.val();
           if (data) {
             setUserData({
@@ -50,8 +72,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
             });
           }
           setIsLoading(false);
-        }, {
-          onlyOnce: true 
         });
       } else {
         setAccessToken(null);
@@ -60,14 +80,28 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       }
     });
   }, []);
+
+  useEffect(() => {
+    const storedAccessToken = localStorage.getItem('accessToken');
+    const storedUserData = localStorage.getItem('userData');
   
+    if (storedAccessToken) {
+      _setAccessToken(storedAccessToken); 
+    }
+  
+    if (storedUserData) {
+      _setUserData(JSON.parse(storedUserData)); 
+    }
+  
+    setIsLoading(false);
+  }, []);
 
   return (
     <UserContext.Provider  
       value={{ 
-        accessToken, 
+        accessToken: _accessToken, 
         setAccessToken, 
-        userData, 
+        userData: _userData, 
         setUserData, 
         isLoading 
       }}>

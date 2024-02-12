@@ -16,10 +16,6 @@ export default function HomePage() {
     return <div>Loading...</div>;
   }
 
-
-  console.log("userLoggedIn", userLoggedIn)
-  console.log("accessToken", accessToken)
-
   
   return (
     <div>
