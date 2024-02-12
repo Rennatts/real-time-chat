@@ -55,6 +55,7 @@ export class MessagesGateway {
     //TODO: save the message to the database
 
     const message = await this.messagesService.sendMessageToRoom(sendMessageToChatRoomDto);
+    console.log("message", message)
 
     if(message){
       this.server.to(sendMessageToChatRoomDto.roomId).emit('messageFromRoom', message);
@@ -71,15 +72,6 @@ export class MessagesGateway {
       return room;
   }
 
-  // @SubscribeMessage('sendMessageToRoom')
-  // sendMessageToRoom(
-  //     @MessageBody() data: { roomId: string; message: string }, 
-  //     @ConnectedSocket() client: Socket) {
-  //     this.server.to(data.roomId).emit('messageFromRoom', data.message);
-  // }
-
-
-
   @SubscribeMessage('findAllChatRooms')
   getRooms() {
     return this.messagesService.getRooms();
@@ -88,10 +80,11 @@ export class MessagesGateway {
 
   @SubscribeMessage('leaveRoom')
   leaveRoom(
-    @MessageBody() roomName: string, 
+    @MessageBody() roomId: string, 
     @ConnectedSocket() client: Socket) {
-      client.leave(roomName);
-      return `Left room ${roomName}`;
+      const answer = this.messagesService.leaveRoom(roomId, client.id)
+      this.server.to(roomId).emit('leftRoom', answer);
+      return answer;
   }
 
   @SubscribeMessage('typing')

@@ -70,9 +70,12 @@ export class MessagesService {
     return roomId;
   }
 
-  leaveRoom(roomId: string, clientId: string) {
+  leaveRoom(roomId: string, senderId: string): boolean {
     if (this.roomParticipants[roomId]) {
-        this.roomParticipants[roomId].delete(clientId);
+      this.roomParticipants[roomId].delete(senderId);
+      return true
+    }else {
+      return false
     }
   }
 
