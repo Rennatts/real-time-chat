@@ -10,7 +10,7 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import Button from '../components/common/Button';
+import Button from '../components/common/Button/Button';
 import { useSignUpUser } from '../hooks/useSignupUser'; 
 
 function SignupPage() {

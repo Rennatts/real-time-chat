@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import GenericChat from '../components/chat/GenericChat';
 import { useUserContext } from '../context/userContext';
 import { useSocket } from '../context/socketContext';
-import Button from '../components/common/Button';
+import Button from '../components/common/Button/Button';
 
 
 function ChatRoomPage() {

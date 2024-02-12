@@ -1,7 +1,7 @@
 
 import Button from '@mui/material/Button';
-import { useUserContext } from '../context/userContext';
-import { useLogoutUser } from '../hooks/useLogoutUser'
+import { useUserContext } from '../../context/userContext';
+import { useLogoutUser } from '../../hooks/useLogoutUser'
 import { BiMessageRoundedAdd } from "react-icons/bi";
 import Styled from './Header.Styles';
 

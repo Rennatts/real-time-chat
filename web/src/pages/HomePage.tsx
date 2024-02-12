@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useUserContext } from '../context/userContext';
 
-import Button from '../components/common/Button';
+import Button from '../components/common/Button/Button';
 import Chat from '../components/chat/Chat';
 
 export default function HomePage() {

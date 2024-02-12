@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 
 const socket = io('http://localhost:4000');
@@ -41,12 +41,6 @@ function Chat({ userData }: ChatProps) {
         }
     };
 
-    const fetchMessages = () => {
-        socket.emit('findAllMessages');
-        socket.on('findAllMessages', (fetchedMessages) => {
-            setMessages(fetchedMessages);
-        });
-    };
 
     return (
         <div>

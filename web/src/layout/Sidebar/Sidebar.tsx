@@ -8,14 +8,14 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import ChatIcon from '@mui/icons-material/ChatTwoTone';
 import { PiChatsCircle } from "react-icons/pi";
 import { IoIosSearch } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
 import { IoLogOutOutline } from "react-icons/io5";
 import AccessAlarmIcon from '@mui/icons-material/NavigateNextSharp';
-import { useLogoutUser } from '../hooks/useLogoutUser';
-import { useUserContext } from '../context/userContext';
+import { useLogoutUser } from '../../hooks/useLogoutUser';
+import { useUserContext } from '../../context/userContext';
+import { IoHomeOutline } from "react-icons/io5";
 import Styled from './Sidebar.Styles';
 import { useNavigate } from 'react-router-dom';
 
@@ -51,6 +51,14 @@ export default function Sidebar() {
         onKeyDown={toggleDrawer(false)}
         >
         <List>
+            <ListItem disablePadding>
+                <ListItemButton onClick={()=> navigate('/')}>
+                    <ListItemIcon>
+                        <IoHomeOutline size={25}/>
+                    </ListItemIcon>
+                <ListItemText primary={'Home'} />
+                </ListItemButton>
+            </ListItem>
             <ListItem disablePadding>
                 <ListItemButton onClick={()=> navigate('/chats')}>
                     <ListItemIcon>
