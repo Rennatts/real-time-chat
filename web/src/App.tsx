@@ -1,12 +1,13 @@
-import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { UserProvider } from "./context/userContext";
 import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
 import SignupPage from "./pages/SignupPage";
-import './App.css';
 import Sidebar from "./layout/Sidebar";
 import ChatsPage from './pages/ChatsPage';
+
+import './App.css';
+import ChatRoomPage from './pages/ChatRoomPage';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/chats" element={<ChatsPage />} />
+              <Route path="/chatroom/:roomId" element={<ChatRoomPage/>}></Route>
             </Routes>
           </div>
         </div>

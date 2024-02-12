@@ -35,7 +35,6 @@ export class MessagesService {
   createRoom(createChatRoomDto: CreateChatRoomDto) {
     const roomId = Math.random().toString(36).substring(7); 
     const room = {...createChatRoomDto, roomId}
-    console.log("room", room)
     this.rooms.push(room)
     return room;
   }
@@ -46,6 +45,7 @@ export class MessagesService {
 
   joinRoom(roomId: string, clientId: string): string {
     const room = this.rooms.find(room => room.roomId === roomId);
+    //console.log("---room----", room)
     if (!room) {
         throw new Error('Room does not exist');
     }

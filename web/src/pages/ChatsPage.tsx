@@ -2,12 +2,15 @@ import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import Header from '../layout/Header'
 import CreateChatRoom from '../components/CreateChatRoom/CreateChatRoom';
+import { useNavigate } from 'react-router-dom';
+
 
 const socket = io('http://localhost:4000');
 
 function ChatsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [chats, setChats] = useState<{roomId: string, name: string, description: string}[]>([]);
+    const navigate = useNavigate();
 
     const handleOpenModal = () => setIsModalOpen(true);
     const handleCloseModal = () => setIsModalOpen(false);
@@ -33,13 +36,13 @@ function ChatsPage() {
         console.log('Connected to server');
       });
 
-      socket.on('roomJoined', (data) => {
+      socket.on('roomJoined', (data: any) => {
         console.log('Data received:', data);
+        if(data.roomId){
+          navigate(`/chatroom/${data.roomId}`)
+        }
       });
-      
-      // socket.on('roomJoined', (data) => {
-      //   console.log(`Joined room: ${data.roomId}`);
-      // });
+    
     
       return () => {
         socket.off('roomJoined');
@@ -57,7 +60,8 @@ function ChatsPage() {
 
 
     const handleJoinChat = (roomId: any) => {
-      socket.emit('joinRoom', { roomId });
+      console.log("--roomId--", roomId)
+      socket.emit('joinRoom', { roomId: roomId });
     };
   
 
