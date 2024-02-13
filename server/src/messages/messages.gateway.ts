@@ -16,6 +16,13 @@ export class MessagesGateway {
   
   constructor(private readonly messagesService: MessagesService) {}
 
+  @SubscribeMessage('authenticate')
+  handleAuthentication(
+    @MessageBody() data: { userId: string }, 
+    @ConnectedSocket() client: Socket) {
+    this.messagesService.mapUserToSocket(data.userId, client.id);
+  }
+
   @SubscribeMessage('createMessage')
   async create(@MessageBody() createMessageDto: CreateMessageDto) {
     const message = await this.messagesService.create(createMessageDto);
@@ -104,9 +111,16 @@ export class MessagesGateway {
   async sendInvitation(
     @MessageBody() data: { roomId: string, recipientId: string }, 
     @ConnectedSocket() client: Socket) {
+    const recipientSocketId = this.messagesService.getSocketIdByUserId(data.recipientId);
+    if (!recipientSocketId) {
+      console.error('Recipient not connected');
+      return;
+    }
     const invitation = this.messagesService.createInvitation(data.roomId, client.id, data.recipientId);
-    this.server.to(data.recipientId).emit('invitationReceived', invitation);
+    console.log("invitation", invitation)
+    this.server.to(recipientSocketId).emit('invitationReceived', invitation);
   }
+
  
   @SubscribeMessage('acceptInvitation')
   async acceptInvitation(

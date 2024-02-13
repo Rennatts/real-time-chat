@@ -12,6 +12,8 @@ export class MessagesService {
   rooms: ChatRoom[] = []
   private roomParticipants: { [roomId: string]: Set<string> } = {};
   private invitations: Invitation[] = [];
+  private userToSocketMap = new Map<string, string>(); 
+
 
 
   identify(name: string, clientId: string){
@@ -122,6 +124,8 @@ export class MessagesService {
     };
     this.invitations.push(invitation);
 
+    console.log("-------", this.invitations, "-------")
+
     return invitation;
   }
 
@@ -130,6 +134,12 @@ export class MessagesService {
     return this.invitations.find(invite => invite.invitationId === invitationId);
   }
 
+  mapUserToSocket(userId: string, socketId: string) {
+    this.userToSocketMap.set(userId, socketId);
+  }
 
+  getSocketIdByUserId(userId: string): string | undefined {
+    return this.userToSocketMap.get(userId);
+  }
 
 }

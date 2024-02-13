@@ -13,9 +13,10 @@ function ChatRoomPage() {
     const { userData } = useUserContext();
     const location = useLocation();
     const { state } = location;
-    const [letChatRoom, setLeftChatRoom] = useState<boolean>(false);
     const { users, loading, error } = useFetchAllUsers(); 
-    const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+    const [selectedUserId, setSelectedUserId] = useState<string>('');
+    const [leftChatRoom, setLeftChatRoom] = useState<boolean>(false);
+
     console.log("selectedUserId", selectedUserId)
 
     useEffect(() => {
@@ -27,7 +28,7 @@ function ChatRoomPage() {
 
         socket.on('leftRoom', handleNavigateOutOfChatRoom);
       
-        if(letChatRoom) {
+        if(leftChatRoom) {
             navigate('/chats')
         }
 
@@ -35,7 +36,7 @@ function ChatRoomPage() {
           socket.off('leftRoom');
         };
 
-    }, [socket, state, letChatRoom]); 
+    }, [socket, state, leftChatRoom]); 
 
     const handleLeaveChatRoom = () => {
         if (socket == null) return; 
@@ -52,12 +53,31 @@ function ChatRoomPage() {
 
     },[users])
 
-    const handleSentInvite = ( roomId: string, receiptId: string ) => {
-        if(roomId && receiptId){ 
-            socket.emit('createRoom', { roomId: roomId, receiptId: selectedUserId }); 
-            setSelectedUserId(null);
+    const handleSentInvite = () => {
+
+        const roomId = state.roomId;
+        if(roomId && selectedUserId){ 
+            console.log("selectedUserId", selectedUserId)
+            console.log("roomId", roomId)
+            socket.emit('sendInvitation', { roomId: roomId, recipientId: selectedUserId }); 
         }
     };
+    
+
+
+    // useEffect(() => {
+    //     if (!socket) return;
+
+    //     const handleNewMessage = (data: { invitationId: string, roomId: string, roomName: string, senderId: string, recipientId: string }) => {
+    //         console.log("----DATA----", data)
+    //     };
+
+    //     socket.on('invitationReceived', handleNewMessage);
+      
+    //     return () => {
+    //       socket.off('invitationReceived');
+    //     };
+    // }, [socket]); 
 
 
     return (
@@ -77,10 +97,13 @@ function ChatRoomPage() {
                     />
                 )}
                 onChange={(event, value) => {
-                    setSelectedUserId(value ? value.id : null);
+                    if (value !== null) { 
+                      setSelectedUserId(value.id);
+                    }
                 }}
+                  
             />
-            <Button text="Send Invite" onSubmit={handleSentInvite}></Button>
+            <Button text="Send Invite" onClick={handleSentInvite} />
         </Stack>
 
         </div>
