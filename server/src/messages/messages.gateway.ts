@@ -37,9 +37,8 @@ export class MessagesGateway {
     try {
         const result = await this.messagesService.joinRoom(roomId, client.id);
         client.join(roomId);
-        console.log(`Client ${client.id} joined room ${roomId}`);
 
-        this.server.emit('roomJoined', { roomId: result });
+        this.server.emit('roomJoined', result );
         return result;
     } catch (error) {
         throw new WsException(error.message);

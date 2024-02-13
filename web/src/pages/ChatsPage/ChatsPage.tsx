@@ -45,7 +45,7 @@ function ChatsPage() {
       socket.on('roomJoined', (data: any) => {
         console.log('Data received:', data);
         if(data.roomId){
-          navigate(`/chatroom/${data.roomId}`)
+          navigate(`/chatroom/${data.roomId}`,  {state:{ ...data }});
         }
       });
     

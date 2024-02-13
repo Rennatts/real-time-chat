@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import GenericChat from '../components/chat/GenericChat';
 import { useUserContext } from '../context/userContext';
 import { useSocket } from '../context/socketContext';
@@ -10,12 +10,14 @@ function ChatRoomPage() {
     const socket = useSocket(); 
     const navigate = useNavigate();
     const { userData } = useUserContext();
-    let { roomId } = useParams();
+    const location = useLocation();
+    const { state } = location;
+    // let { roomId } = useParams();
     const [letChatRoom, setLeftChatRoom] = useState<boolean>(false);
-    console.log("roomId", roomId)
+    console.log("state", state)
 
     useEffect(() => {
-        if (!socket || !roomId) return;
+        if (!socket || !state) return;
 
         const handleNavigateOutOfChatRoom = (data: any) => {
             setLeftChatRoom(data)
@@ -31,22 +33,22 @@ function ChatRoomPage() {
           socket.off('leftRoom');
         };
 
-    }, [socket, roomId, letChatRoom]); 
+    }, [socket, state, letChatRoom]); 
 
     const handleLeaveChatRoom = () => {
         if (socket == null) return; 
 
-        if (roomId &&  userData.id) {
+        if (state &&  userData.id) {
             socket.emit('leaveRoom',
-                roomId
+              state.id
             );
         }
     }
 
 
     return (
-        <div>ChatRoom number {roomId}
-        <GenericChat userData={userData} roomId={roomId!}/>
+        <div>ChatRoom {state.name}
+        <GenericChat userData={userData} roomId={state.id!}/>
         <Button text="Leave Chat Room" onClick={handleLeaveChatRoom}></Button>
         </div>
     )

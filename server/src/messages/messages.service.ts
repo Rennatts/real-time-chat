@@ -49,7 +49,7 @@ export class MessagesService {
     return this.rooms
   }
 
-  joinRoom(roomId: string, clientId: string): string {
+  joinRoom(roomId: string, clientId: string): ChatRoom {
     const room = this.rooms.find(room => room.roomId === roomId);
     if (!room) {
         throw new Error('Room does not exist');
@@ -67,7 +67,7 @@ export class MessagesService {
 
     this.roomParticipants[roomId].add(clientId);
 
-    return roomId;
+    return room;
   }
 
   leaveRoom(roomId: string, senderId: string): boolean {
