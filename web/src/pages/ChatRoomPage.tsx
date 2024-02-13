@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import GenericChat from '../components/chat/GenericChat';
 import { useUserContext } from '../context/userContext';
 import { useSocket } from '../context/socketContext';
 import Button from '../components/common/Button/Button';
-
+import { Autocomplete, Stack, TextField } from '@mui/material';
+import { useFetchAllUsers } from '../hooks/useFetchAllUsers';
 
 function ChatRoomPage() {
     const socket = useSocket(); 
@@ -12,9 +13,10 @@ function ChatRoomPage() {
     const { userData } = useUserContext();
     const location = useLocation();
     const { state } = location;
-    // let { roomId } = useParams();
     const [letChatRoom, setLeftChatRoom] = useState<boolean>(false);
-    console.log("state", state)
+    const { users, loading, error } = useFetchAllUsers(); 
+    const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+    console.log("selectedUserId", selectedUserId)
 
     useEffect(() => {
         if (!socket || !state) return;
@@ -45,11 +47,42 @@ function ChatRoomPage() {
         }
     }
 
+    useEffect(() => {
+        console.log("users", users)
+
+    },[users])
+
+    const handleSentInvite = ( roomId: string, receiptId: string ) => {
+        if(roomId && receiptId){ 
+            socket.emit('createRoom', { roomId: roomId, receiptId: selectedUserId }); 
+            setSelectedUserId(null);
+        }
+    };
+
 
     return (
         <div>ChatRoom {state.name}
         <GenericChat userData={userData} roomId={state.id!}/>
         <Button text="Leave Chat Room" onClick={handleLeaveChatRoom}></Button>
+        <Stack>
+            <h1>Invite Users to the chat</h1>
+            <Autocomplete
+                options={users}
+                getOptionLabel={(option) => option.name}
+                renderInput={(params) => (
+                    <TextField
+                    {...params}
+                    label="Search users" 
+                    variant="outlined" 
+                    />
+                )}
+                onChange={(event, value) => {
+                    setSelectedUserId(value ? value.id : null);
+                }}
+            />
+            <Button text="Send Invite" onSubmit={handleSentInvite}></Button>
+        </Stack>
+
         </div>
     )
 }

@@ -16,6 +16,7 @@ import AccessAlarmIcon from '@mui/icons-material/NavigateNextSharp';
 import { useLogoutUser } from '../../hooks/useLogoutUser';
 import { useUserContext } from '../../context/userContext';
 import { IoHomeOutline } from "react-icons/io5";
+import { FcInvite } from "react-icons/fc";
 import Styled from './Sidebar.Styles';
 import { useNavigate } from 'react-router-dom';
 
@@ -65,6 +66,14 @@ export default function Sidebar() {
                         <PiChatsCircle size={25}/>
                     </ListItemIcon>
                     <ListItemText primary={'Chats'} />
+                </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+                <ListItemButton onClick={()=> navigate('/invitations')}>
+                <ListItemIcon>
+                    <FcInvite size={25}/>
+                </ListItemIcon>
+                <ListItemText primary={'Invitations'} />
                 </ListItemButton>
             </ListItem>
             <ListItem disablePadding>

@@ -54,7 +54,6 @@ export class MessagesGateway {
     //TODO: save the message to the database
 
     const message = await this.messagesService.sendMessageToRoom(sendMessageToChatRoomDto);
-    console.log("message", message)
 
     if(message){
       this.server.to(sendMessageToChatRoomDto.roomId).emit('messageFromRoom', message);
@@ -98,5 +97,28 @@ export class MessagesGateway {
   @SubscribeMessage('searchRooms')
   searchRooms(@MessageBody() query: string) {
     return this.messagesService.searchRooms(query);
+  }
+
+
+  @SubscribeMessage('sendInvitation')
+  async sendInvitation(
+    @MessageBody() data: { roomId: string, recipientId: string }, 
+    @ConnectedSocket() client: Socket) {
+    const invitation = this.messagesService.createInvitation(data.roomId, client.id, data.recipientId);
+    this.server.to(data.recipientId).emit('invitationReceived', invitation);
+  }
+ 
+  @SubscribeMessage('acceptInvitation')
+  async acceptInvitation(
+    @MessageBody() invitationId: string, 
+    @ConnectedSocket() client: Socket) {
+    const invitation = this.messagesService.getInvitation(invitationId);
+
+    if (!invitation) {
+      throw new WsException('Invitation not found');
+    }
+
+    const result = await this.messagesService.joinRoom(invitation.roomId, client.id);
+    this.server.to(invitation.roomId).emit('newMemberJoined', { roomId: result, userId: client.id });
   }
 }

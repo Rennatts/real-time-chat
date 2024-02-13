@@ -9,6 +9,7 @@ import ChatsPage from './pages/ChatsPage/ChatsPage';
 import './App.css';
 import ChatRoomPage from './pages/ChatRoomPage';
 import { SocketProvider } from "./context/socketContext";
+import InvitationsPage from "./pages/InvitationsPage";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
                 <Route path="/signup" element={<SignupPage />} />
                 <Route path="/chats" element={<ChatsPage />} />
                 <Route path="/chatroom/:roomId" element={<ChatRoomPage/>}></Route>
+                <Route path="/invitations" element={<InvitationsPage />} />
               </Routes>
             </div>
           </div>

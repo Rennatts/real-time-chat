@@ -11,6 +11,7 @@ export class MessagesService {
   clientToUser = {};
   rooms: ChatRoom[] = []
   private roomParticipants: { [roomId: string]: Set<string> } = {};
+  private invitations: Invitation[] = [];
 
 
   identify(name: string, clientId: string){
@@ -107,6 +108,26 @@ export class MessagesService {
 
     room.messages.push(newMessage);
     return newMessage; 
+  }
+
+
+
+  createInvitation(roomId: string, senderId: string, recipientId: string): Invitation {
+    const invitation: Invitation = {
+      invitationId: Math.random().toString(36).substring(7),
+      roomId,
+      roomName: this.rooms.find(room => room.roomId === roomId)?.name || 'Unknown Room',
+      senderId,
+      recipientId
+    };
+    this.invitations.push(invitation);
+
+    return invitation;
+  }
+
+
+  getInvitation(invitationId: string): Invitation | undefined {
+    return this.invitations.find(invite => invite.invitationId === invitationId);
   }
 
 
