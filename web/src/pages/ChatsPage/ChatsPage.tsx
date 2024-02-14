@@ -42,6 +42,8 @@ function ChatsPage() {
       };
     }, [socket, addRoom]);
 
+    console.log("rooms", rooms)
+
     useEffect(() => {
       if (socket == null) return; 
       

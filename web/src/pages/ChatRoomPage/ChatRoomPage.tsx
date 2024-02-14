@@ -33,7 +33,7 @@ function ChatRoomPage() {
     const handleLeaveChatRoom = () => {
         if (!socket || !state || !userData.id) return;
         socket.emit('leaveRoom', state.id);
-        navigate('/chats');
+        navigate('/');
     };
 
     return (

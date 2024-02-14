@@ -5,7 +5,7 @@ interface ChatContextType {
   rooms: ChatRoom[];
   invitations: Invitation[];
   addRoom: (room: ChatRoom) => void;
-  addInvitation: (itation: Invitation) => void;
+  addInvitation: (invitation: Invitation) => void;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);

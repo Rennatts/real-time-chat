@@ -25,12 +25,17 @@ function Header( { onClick, isOpen, setIsModalOpen }: HeaderProps) {
   return (
     <Styled.Container>
         {userLoggedIn ? 
-            (<Button onClick={openModal}>
-                <BiMessageRoundedAdd 
-                size={30} 
-                style={{ color: 'white' }}
-                />
-            </Button>) 
+            (
+              <Styled.ButtonBox>
+                <Button onClick={openModal}>
+                    <BiMessageRoundedAdd 
+                    size={30} 
+                    style={{ color: 'white' }}
+                    />
+                </Button>
+                  <p style={{fontSize: "12px"}}>Create chat room</p>
+              </Styled.ButtonBox>
+            ) 
             : 
             (<></>)
         }

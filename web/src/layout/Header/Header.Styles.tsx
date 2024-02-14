@@ -14,4 +14,16 @@ const Container = styled.div<CustomSidebarProps>`
     align-items: center;
 `;
 
-export default { Container };
+const ButtonBox = styled.div`
+    color: white !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`;
+
+
+export default { 
+    Container,
+    ButtonBox
+};
