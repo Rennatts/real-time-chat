@@ -8,15 +8,8 @@ import Styles from './ChartsPage.Styles'
 import { Stack } from '@mui/material';
 import { useChat } from '../../context/chatContext';
 import InvitationCard from '../../components/InvitationCard/InvitationCard';
+import { ChatRoom, CreateChatRoo, Invitation } from '../../interfaces/types';
 
-type Invitation = {
-  invitationId: string;
-  recipientId:  string;
-  roomId:  string;
-  roomName:  string;
-  senderId:  string;
-  senderName:  string;
-}
 
 function ChatsPage() {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -31,8 +24,8 @@ function ChatsPage() {
     useEffect(() => {
       if (!socket) return;
 
-      const handleNewChatRoom = (newChat: any) => {
-        addRoom(newChat); 
+      const handleNewChatRoom = (newChatRoom: ChatRoom) => {
+        addRoom(newChatRoom); 
       };
     
       socket.on('newChatRoom', handleNewChatRoom);
@@ -41,8 +34,6 @@ function ChatsPage() {
         socket.off('newChatRoom', handleNewChatRoom);
       };
     }, [socket, addRoom]);
-
-    console.log("rooms", rooms)
 
     useEffect(() => {
       if (socket == null) return; 
@@ -53,10 +44,9 @@ function ChatsPage() {
 
 
 
-      socket.on('roomJoined', (data: any) => {
-        console.log("--data--", data)
-        if(data.roomId){
-          navigate(`/chatroom/${data.roomId}`,  {state:{ roomId: data.roomId, roomName: data.roomName }});
+      socket.on('roomJoined', (chatRoom: ChatRoom) => {
+        if(chatRoom.roomId){
+          navigate(`/chatroom/${chatRoom.roomId}`,  {state:{ roomId: chatRoom.roomId, roomName: chatRoom.roomName }});
         }
       });
     
@@ -66,7 +56,7 @@ function ChatsPage() {
       };
     }, [socket, navigate]);
 
-    const handleCreateChatRoom = (formData: any) => {
+    const handleCreateChatRoom = (formData: CreateChatRoo) => {
       if(formData.chatRoomName && formData.chatRoomDescription){ 
         socket.emit('createRoom', { roomName: formData.chatRoomName, description: formData.chatRoomDescription }); 
       }
@@ -78,7 +68,6 @@ function ChatsPage() {
     };
 
     const handleJoinChatRoom = (invitation: Invitation) => {
-      console.log("invitation", invitation)
       if (!socket) {
           console.error("Socket não está conectado.");
           return;
@@ -89,31 +78,15 @@ function ChatsPage() {
       navigate(`/chatroom/${invitation.roomId}`, {state:{ roomId: invitation.roomId, roomName: invitation.roomName }});
     };
 
-    useEffect(() => {
-      if (!socket) return;
-
-      const handleEnterChatRoom = (data: any) => {
-      };
-
-      socket.on('newMemberJoined', handleEnterChatRoom);
-    
-      return () => {
-        socket.off('newMemberJoined', handleEnterChatRoom);
-      };
-    }, [socket]); 
-
-    console.log("rooms", rooms)
 
     useEffect(() => {
       if (!socket) return;
 
-      const handleReceiveInvitation = (invitation: any) => {
+      const handleReceiveInvitation = (invitation: Invitation) => {
           addInvitation(invitation);
       };
 
       socket.on('invitationReceived', handleReceiveInvitation);
-
-      console.log("invitation", invitations)
 
       return () => {
           socket.off('invitationReceived', handleReceiveInvitation);
@@ -148,7 +121,7 @@ function ChatsPage() {
             <h3>Todos os chats</h3>
           </Styles.Header>
           <Styles.ChatGrid>
-            {rooms.map((chat: any, index: any) => (
+            {rooms.map((chat: ChatRoom, index: number) => (
               <Stack direction="row" spacing={1} key={index} onClick={() => handleJoinChat(chat.roomId)}>
                   <ChatRoomCard {...chat}></ChatRoomCard>
               </Stack>

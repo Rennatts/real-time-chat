@@ -41,7 +41,6 @@ export class MessagesGateway {
   async joinRoom(
     @MessageBody('roomId') roomId: string, 
     @ConnectedSocket() client: Socket) {
-      console.log("roomId", roomId)
     try {
         const result = await this.messagesService.joinRoom(roomId, client.id);
 
@@ -60,18 +59,9 @@ export class MessagesGateway {
     @MessageBody() sendMessageToChatRoomDto: SendMessageToChatRoomDto,
     @ConnectedSocket() client: Socket
   ) {
-    //TODO: save the message to the database
 
     const message = await this.messagesService.sendMessageToRoom(sendMessageToChatRoomDto);
-    console.log("message", message)
     const senderSocketId = this.messagesService.getSocketIdByUserId(sendMessageToChatRoomDto.senderId);
-    const userRooms = this.messagesService.getRoomsForUser(senderSocketId);
-    const userInRoom = this.messagesService.getUsersInRoom(sendMessageToChatRoomDto.roomId)
-
-    console.log("userInRoom", userInRoom)
-
-    console.log("userRooms", userRooms)
-
 
     if(message){
       this.server.to(message.roomId).emit('messageFromRoom', message);
@@ -132,8 +122,6 @@ export class MessagesGateway {
     }
     const invitation = this.messagesService.createInvitation(data.roomId, client.id, recipientSocketId, data.senderName);
 
-    console.log("invitation", invitation)
-
     this.server.to(recipientSocketId).emit('invitationReceived', invitation);
     return invitation;
   }
@@ -143,9 +131,7 @@ export class MessagesGateway {
   async acceptInvitation(
     @MessageBody() invitationId: string, 
     @ConnectedSocket() client: Socket) {
-      console.log("client.id")
       const invitation = this.messagesService.getInvitation(invitationId);
-      console.log("invitation", invitation)
 
     if (!invitation) {
       throw new WsException('Invitation not found');

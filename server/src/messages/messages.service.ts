@@ -100,14 +100,12 @@ export class MessagesService {
 
 
   sendMessageToRoom(sendMessageToChatRoomDto: SendMessageToChatRoomDto): Message {
-    console.log("sendMessageToChatRoomDto", sendMessageToChatRoomDto)
     const room = this.rooms.find(room => room.roomId === sendMessageToChatRoomDto.roomId);
     if (!room) {
         throw new Error('Room does not exist');
     }
 
     const senderSocketId = this.getSocketIdByUserId(sendMessageToChatRoomDto.senderId);
-    console.log("senderSocketId", senderSocketId)
     const newMessage: Message = {
       senderId: senderSocketId,
       senderName: sendMessageToChatRoomDto.senderName, 

@@ -1,11 +1,10 @@
 import { useUserContext } from '../context/userContext';
 
-import Chat from '../components/chat/Chat';
 import LoginPage from './LoginPage';
 import ChatsPage from './ChatsPage/ChatsPage';
 
 export default function HomePage() {
-  const { accessToken, userData, isLoading } = useUserContext();
+  const { accessToken, isLoading } = useUserContext();
 
   const userLoggedIn = accessToken !== null
 
@@ -20,7 +19,6 @@ export default function HomePage() {
         userLoggedIn ? 
         (
           <div>
-              {/* <Chat userData={userData}></Chat> */}
               <ChatsPage></ChatsPage>
           </div>
         )

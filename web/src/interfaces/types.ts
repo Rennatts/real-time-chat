@@ -1,6 +1,6 @@
 export interface ChatRoom {
     roomId: string;
-    name: string;
+    roomName: string;
     description: string;
     messages: Message[];
 }
@@ -19,4 +19,18 @@ export interface Message {
     senderName: string;
     text: string;
     roomId: string;
+}
+
+export interface CreateChatRoo {
+    chatRoomDescription: string;
+    chatRoomName: string
+}
+
+export interface Invitation {
+    invitationId: string;
+    recipientId:  string;
+    roomId:  string; 
+    roomName:  string;
+    senderId:  string;
+    senderName:  string;
 }
