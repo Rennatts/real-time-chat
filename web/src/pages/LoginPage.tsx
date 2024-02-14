@@ -11,6 +11,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Button from '../components/common/Button/Button';
+import { Link as RouterLink } from 'react-router-dom';
 import { useLoginUser } from '../hooks/useLoginUser';
 
 function LoginPage() {
@@ -90,6 +91,11 @@ function LoginPage() {
             <Grid item xs>
               <Link href="#" variant="body2">
                 Forgot password?
+              </Link>
+            </Grid>
+            <Grid item xs>
+              <Link component={RouterLink} to="/signup" variant="body2">
+                Do not have an account?
               </Link>
             </Grid>
           </Grid>

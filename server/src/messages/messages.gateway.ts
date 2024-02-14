@@ -122,6 +122,8 @@ export class MessagesGateway {
     }
     const invitation = this.messagesService.createInvitation(data.roomId, client.id, recipientSocketId, data.senderName);
 
+    console.log("invitation", invitation)
+
     this.server.to(recipientSocketId).emit('invitationReceived', invitation);
     return invitation;
   }

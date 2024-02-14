@@ -57,7 +57,7 @@ function ChatsPage() {
 
     const handleCreateChatRoom = (formData: any) => {
       if(formData.chatRoomName && formData.chatRoomDescription){ 
-        socket.emit('createRoom', { name: formData.chatRoomName, description: formData.chatRoomDescription }); 
+        socket.emit('createRoom', { roomName: formData.chatRoomName, description: formData.chatRoomDescription }); 
       }
     };
 

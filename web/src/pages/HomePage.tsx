@@ -1,17 +1,13 @@
-import { useNavigate } from 'react-router-dom';
-
 import { useUserContext } from '../context/userContext';
 
-import Button from '../components/common/Button/Button';
 import Chat from '../components/chat/Chat';
+import LoginPage from './LoginPage';
 
 export default function HomePage() {
   const { accessToken, userData, isLoading } = useUserContext();
-  const navigate = useNavigate();
 
   const userLoggedIn = accessToken !== null
 
-  console.log("userData", userData)
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -19,7 +15,6 @@ export default function HomePage() {
 
   return (
     <div>
-      HomePage
       {
         userLoggedIn ? 
         (
@@ -31,20 +26,7 @@ export default function HomePage() {
         : 
         (
           <div>
-            <div>
-              <p>Already have an account?, login please
-                <Button 
-                text="Login" 
-                onClick={()=> navigate('/login')}/>
-              </p>
-            </div>
-            <div>
-              <p>Do not have an account?, signup please
-              <Button 
-                text="Signup" 
-                onClick={()=> navigate('/signup')}/>
-              </p>
-            </div>
+            <LoginPage/>
           </div>
         )
       }

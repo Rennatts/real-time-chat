@@ -11,6 +11,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Button from '../components/common/Button/Button';
+import { Link as RouterLink } from 'react-router-dom';
 import { useSignUpUser } from '../hooks/useSignupUser'; 
 
 function SignupPage() {
@@ -113,7 +114,7 @@ function SignupPage() {
           )}
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link component={RouterLink} to="/login" variant="body2">
                 Already have an account? Sign in
               </Link>
             </Grid>

@@ -44,6 +44,7 @@ export class MessagesService {
         messages: [] 
     };
     this.rooms.push(room);
+    console.log("ddddd", this.rooms)
     return room;
   }
 
@@ -119,15 +120,19 @@ export class MessagesService {
 
 
   createInvitation(roomId: string, senderId: string, recipientId: string, senderName: string): Invitation {
+    // const foundRoom = this.rooms.find(room => room.roomId === roomId)?.roomName
+    const foundRoom = this.findRoomById(roomId);
+    console.log("foundRoom", foundRoom)
     const invitation: Invitation = {
       invitationId: Math.random().toString(36).substring(7),
       roomId,
-      roomName: this.rooms.find(room => room.roomId === roomId)?.roomName || 'Unknown Room',
+      roomName: foundRoom.roomName,
       senderId,
       recipientId,
       senderName
     };
     this.invitations.push(invitation);
+    console.log("invitation", invitation)
 
     return invitation;
   }
