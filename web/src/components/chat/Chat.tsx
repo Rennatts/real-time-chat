@@ -3,6 +3,7 @@ import { Box, TextField } from '@mui/material';
 import { useSocket } from '../../context/socketContext';
 import Styles from './Chat.Styles';
 import Button from '../common/Button/Button';
+import { Message } from '../../interfaces/types';
 
 interface UserData {
     name?: string;
@@ -24,8 +25,7 @@ function Chat({ userData, roomId }: ChatProps) {
     useEffect(() => {
         if (!socket || !roomId) return;
     
-        const handleNewMessage = (data: any) => {
-            console.log("data", data)
+        const handleNewMessage = (data: Message) => {
             if (data.roomId === roomId) {
                 setMessages((msgs) => [...msgs, { name: data.senderName, text: data.text }]);
             }
@@ -39,7 +39,7 @@ function Chat({ userData, roomId }: ChatProps) {
     }, [socket, roomId]);
     
 
-    const sendMessageToRoom = (event: any) => {
+    const sendMessageToRoom = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         
         if (socket == null) return; 

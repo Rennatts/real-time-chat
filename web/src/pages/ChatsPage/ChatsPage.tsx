@@ -18,7 +18,6 @@ function ChatsPage() {
     const { rooms, addRoom } = useChat();
     const { addInvitation, invitations } = useChat();
 
-    const handleOpenModal = () => setIsModalOpen(true);
     const handleCloseModal = () => setIsModalOpen(false);
 
     useEffect(() => {
@@ -95,7 +94,7 @@ function ChatsPage() {
 
     return (
       <div>
-        <Header invitationsNumber={invitations.length} onClick={handleOpenModal} isOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
+        <Header invitationsNumber={invitations.length} isOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
         <div>
           {invitations.length > 0 ? (
             <Styles.InvitationsList>

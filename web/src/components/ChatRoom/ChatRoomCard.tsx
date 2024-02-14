@@ -3,12 +3,11 @@ import Styles from './ChatRoomCard.Styles';
 
 
 interface Chat {
-  roomId: string;
   roomName: string;
   description: string;
 }
 
-function ChatRoomCard({ roomId, roomName }: Chat) {
+function ChatRoomCard({ roomName }: Chat) {
 
     function stringToColor(string: string) {
         let hash = 0;
