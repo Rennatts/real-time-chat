@@ -15,6 +15,7 @@ What things you need to install the software and how to install them:
 
 - Docker
 - Docker Compose
+- Firebase variables, see in .env.example the variables needed
 
 You can download Docker Desktop for Windows and Mac from [Docker Hub](https://hub.docker.com/?overlay=onboarding). If you're using Linux, follow the instructions for your distribution from the [Docker documentation](https://docs.docker.com/engine/install/).
 
