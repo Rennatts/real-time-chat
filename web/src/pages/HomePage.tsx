@@ -11,6 +11,8 @@ export default function HomePage() {
 
   const userLoggedIn = accessToken !== null
 
+  console.log("userData", userData)
+
   if (isLoading) {
     return <div>Loading...</div>;
   }

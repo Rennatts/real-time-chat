@@ -4,4 +4,5 @@ interface Invitation {
     roomName: string;
     senderId: string;
     recipientId: string;
+    senderName: string;
 }

@@ -6,26 +6,22 @@ import { useSocket } from '../../context/socketContext';
 import ChatRoom from '../../components/ChatRoom/ChatRoom';
 import Styles from './ChartsPage.Styles'
 import { Stack } from '@mui/material';
-
+import { useChat } from '../../context/chatContext';
 
 function ChatsPage() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [chats, setChats] = useState<{roomId: string, name: string, description: string}[]>([]);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const navigate = useNavigate();
     const socket = useSocket(); 
+    const { rooms, addRoom } = useChat();
 
     const handleOpenModal = () => setIsModalOpen(true);
     const handleCloseModal = () => setIsModalOpen(false);
 
     useEffect(() => {
-      if (socket == null) return; 
-
-      socket.on('connect', () => {
-          console.log('Connected to server');
-      });
+      if (!socket) return;
 
       const handleNewChatRoom = (newChat: any) => {
-        setChats((chats) => [...chats, newChat]);
+        addRoom(newChat); 
       };
     
       socket.on('newChatRoom', handleNewChatRoom);
@@ -33,7 +29,7 @@ function ChatsPage() {
       return () => {
         socket.off('newChatRoom', handleNewChatRoom);
       };
-    }, [socket]);
+    }, [socket, addRoom]);
 
     useEffect(() => {
       if (socket == null) return; 
@@ -54,29 +50,24 @@ function ChatsPage() {
         socket.off('roomJoined');
       };
     }, [socket, navigate]);
-    
 
-    console.log("chats", chats)
-
-    const handleCreateChatRoom = (formData: { chatRoomName: string; chatRoomDescription: string }) => {
+    const handleCreateChatRoom = (formData: any) => {
       if(formData.chatRoomName && formData.chatRoomDescription){ 
         socket.emit('createRoom', { name: formData.chatRoomName, description: formData.chatRoomDescription }); 
       }
     };
 
-
     const handleJoinChat = (roomId: string) => {
-      if (socket == null) return; 
-      socket.emit('joinRoom', { roomId: roomId });
+      if (!socket) return; 
+      socket.emit('joinRoom', { roomId });
     };
-  
 
     return (
       <div>
         <Header onClick={handleOpenModal} isOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
         Chats
         <Styles.ChatGrid>
-          {chats.map((chat, index) => (
+          {rooms.map((chat: any, index: any) => ( // Use rooms from context
             <Stack direction="row" spacing={1} key={index} onClick={() => handleJoinChat(chat.roomId)}>
                 <ChatRoom {...chat}></ChatRoom>
             </Stack>

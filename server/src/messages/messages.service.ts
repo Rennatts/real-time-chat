@@ -52,7 +52,7 @@ export class MessagesService {
     return this.rooms
   }
 
-  joinRoom(roomId: string, clientId: string): ChatRoom {
+  joinRoom(roomId: string, clientId: string): ChatRoom | Error {
     const room = this.rooms.find(room => room.roomId === roomId);
     if (!room) {
         throw new Error('Room does not exist');
@@ -114,17 +114,16 @@ export class MessagesService {
 
 
 
-  createInvitation(roomId: string, senderId: string, recipientId: string): Invitation {
+  createInvitation(roomId: string, senderId: string, recipientId: string, senderName: string): Invitation {
     const invitation: Invitation = {
       invitationId: Math.random().toString(36).substring(7),
       roomId,
       roomName: this.rooms.find(room => room.roomId === roomId)?.name || 'Unknown Room',
       senderId,
-      recipientId
+      recipientId,
+      senderName
     };
     this.invitations.push(invitation);
-
-    console.log("-------", this.invitations, "-------")
 
     return invitation;
   }
@@ -139,6 +138,9 @@ export class MessagesService {
   }
 
   getSocketIdByUserId(userId: string): string | undefined {
+    console.log("this.userToSocketMap.get(userId)",  this.userToSocketMap.get(userId))
+    console.log("userId",  this.userToSocketMap.get(userId))
+    console.log("-----",  this.userToSocketMap)
     return this.userToSocketMap.get(userId);
   }
 

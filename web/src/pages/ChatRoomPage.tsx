@@ -6,108 +6,67 @@ import { useSocket } from '../context/socketContext';
 import Button from '../components/common/Button/Button';
 import { Autocomplete, Stack, TextField } from '@mui/material';
 import { useFetchAllUsers } from '../hooks/useFetchAllUsers';
+import { useChat } from '../context/chatContext';
 
 function ChatRoomPage() {
-    const socket = useSocket(); 
+    const socket = useSocket();
     const navigate = useNavigate();
     const { userData } = useUserContext();
     const location = useLocation();
     const { state } = location;
-    const { users, loading, error } = useFetchAllUsers(); 
+    const { users, loading, error } = useFetchAllUsers();
     const [selectedUserId, setSelectedUserId] = useState<string>('');
-    const [leftChatRoom, setLeftChatRoom] = useState<boolean>(false);
-
-    console.log("selectedUserId", selectedUserId)
+    const { addInvitation, invitations } = useChat(); 
 
     useEffect(() => {
         if (!socket || !state) return;
 
-        const handleNavigateOutOfChatRoom = (data: any) => {
-            setLeftChatRoom(data)
+        const handleReceiveInvitation = (invitation: any) => {
+            addInvitation(invitation);
         };
 
-        socket.on('leftRoom', handleNavigateOutOfChatRoom);
-      
-        if(leftChatRoom) {
-            navigate('/chats')
-        }
+        socket.on('invitationReceived', handleReceiveInvitation);
 
         return () => {
-          socket.off('leftRoom');
+            socket.off('invitationReceived', handleReceiveInvitation);
         };
-
-    }, [socket, state, leftChatRoom]); 
-
-    const handleLeaveChatRoom = () => {
-        if (socket == null) return; 
-
-        if (state &&  userData.id) {
-            socket.emit('leaveRoom',
-              state.id
-            );
-        }
-    }
-
-    useEffect(() => {
-        console.log("users", users)
-
-    },[users])
+    }, [socket, addInvitation]); 
 
     const handleSentInvite = () => {
-
         const roomId = state.roomId;
-        if(roomId && selectedUserId){ 
-            console.log("selectedUserId", selectedUserId)
-            console.log("roomId", roomId)
-            socket.emit('sendInvitation', { roomId: roomId, recipientId: selectedUserId }); 
+        if (roomId && selectedUserId) {
+            socket.emit('sendInvitation', {
+                roomId: roomId,
+                recipientId: selectedUserId,
+                senderName: userData.name
+            });
         }
     };
-    
 
-
-    // useEffect(() => {
-    //     if (!socket) return;
-
-    //     const handleNewMessage = (data: { invitationId: string, roomId: string, roomName: string, senderId: string, recipientId: string }) => {
-    //         console.log("----DATA----", data)
-    //     };
-
-    //     socket.on('invitationReceived', handleNewMessage);
-      
-    //     return () => {
-    //       socket.off('invitationReceived');
-    //     };
-    // }, [socket]); 
+    const handleLeaveChatRoom = () => {
+        if (!socket || !state || !userData.id) return;
+        socket.emit('leaveRoom', state.id);
+    };
 
 
     return (
-        <div>ChatRoom {state.name}
-        <GenericChat userData={userData} roomId={state.id!}/>
-        <Button text="Leave Chat Room" onClick={handleLeaveChatRoom}></Button>
-        <Stack>
-            <h1>Invite Users to the chat</h1>
-            <Autocomplete
-                options={users}
-                getOptionLabel={(option) => option.name}
-                renderInput={(params) => (
-                    <TextField
-                    {...params}
-                    label="Search users" 
-                    variant="outlined" 
-                    />
-                )}
-                onChange={(event, value) => {
-                    if (value !== null) { 
-                      setSelectedUserId(value.id);
-                    }
-                }}
-                  
-            />
-            <Button text="Send Invite" onClick={handleSentInvite} />
-        </Stack>
-
+        <div>
+            <GenericChat userData={userData} roomId={state.id!}/>
+            <Button text="Leave Chat Room" onClick={handleLeaveChatRoom} />
+            <Stack>
+                <h1>Invite Users to the chat</h1>
+                <Autocomplete
+                    options={users}
+                    getOptionLabel={(option) => option.name}
+                    renderInput={(params) => (
+                        <TextField {...params} label="Search users" variant="outlined" />
+                    )}
+                    onChange={(event, value) => setSelectedUserId(value ? value.id : '')}
+                />
+                <Button text="Send Invite" onClick={handleSentInvite} />
+            </Stack>
         </div>
-    )
+    );
 }
 
-export default ChatRoomPage
+export default ChatRoomPage;

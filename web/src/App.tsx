@@ -11,12 +11,14 @@ import ChatRoomPage from './pages/ChatRoomPage';
 import { SocketProvider } from "./context/socketContext";
 import InvitationsPage from "./pages/InvitationsPage";
 import WebSocketAuthHandler from "./context/webSocketAuthHandler";
+import { ChatProvider } from "./context/chatContext";
 
 function App() {
   return (
     <UserProvider>
       <SocketProvider>
-        <WebSocketAuthHandler/>
+        <ChatProvider>
+          <WebSocketAuthHandler/>
           <Router>
             <div style={{ display: 'flex', height: '100vh' }}>
               <Sidebar/>
@@ -32,6 +34,7 @@ function App() {
               </div>
             </div>
           </Router>
+        </ChatProvider>
       </SocketProvider>
     </UserProvider>
   );
