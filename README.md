@@ -45,3 +45,27 @@ A step-by-step series of examples that tell you how to get a development environ
    //In another terminal
     cd web
     yarn run start
+
+e
+### How to Test
+Login as User X:
+
+Open a web browser and navigate to http://localhost:3050.
+Login using a test account or create a new account for User X.
+Login as User Y:
+
+Open a different web browser or an incognito/private window in the same browser and navigate to http://localhost:3050.
+Login using a different test account or create a new account for User Y.
+
+Create a Chat Room (User X):
+
+As User X, create a new chat room.
+Note down the room's ID or name for inviting User Y.
+Invite Another User (User X -> User Y):
+
+Invite User Y to the chat room using the room's ID or name.
+Verify that User Y receives the invitation in real-time.
+Accept Invitation and Join Chat Room (User Y):
+
+As User Y, accept the invitation.
+Verify that User Y can join the chat room and both users can see each other as participants.
