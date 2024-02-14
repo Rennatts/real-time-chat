@@ -33,3 +33,13 @@ A step-by-step series of examples that tell you how to get a development environ
 2. Build and run the containers using Docker Compose:
    ```bash
     docker-compose up --build
+
+
+3. Another method to run the project is:
+   ```
+   //In one terminal
+   cd server
+    yarn run start
+   //In another terminal
+    cd web
+    yarn run start
