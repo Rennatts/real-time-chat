@@ -9,9 +9,10 @@ interface HeaderProps {
     onClick: () => void;
     isOpen: boolean;
     setIsModalOpen: (isOpen: boolean) => void;
+    invitationsNumber: number;
 }
 
-function Header( { onClick, isOpen, setIsModalOpen }: HeaderProps) {
+function Header( { onClick, isOpen, setIsModalOpen, invitationsNumber }: HeaderProps) {
   const { accessToken, userData } = useUserContext();
   const logoutUser = useLogoutUser();
 
@@ -26,15 +27,21 @@ function Header( { onClick, isOpen, setIsModalOpen }: HeaderProps) {
     <Styled.Container>
         {userLoggedIn ? 
             (
-              <Styled.ButtonBox>
-                <Button onClick={openModal}>
-                    <BiMessageRoundedAdd 
-                    size={30} 
-                    style={{ color: 'white' }}
-                    />
-                </Button>
-                  <p style={{fontSize: "12px"}}>Create chat room</p>
-              </Styled.ButtonBox>
+              <>
+                <div>
+                  <p>Convites recebidos {invitationsNumber}</p>
+                </div>
+                <Styled.ButtonBox>
+                  <Button onClick={openModal}>
+                      <BiMessageRoundedAdd 
+                      size={30} 
+                      style={{ color: 'white' }}
+                      />
+                  </Button>
+                    <p style={{fontSize: "12px"}}>Create chat room</p>
+                </Styled.ButtonBox>
+
+              </>
             ) 
             : 
             (<></>)

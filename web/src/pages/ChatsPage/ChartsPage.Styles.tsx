@@ -35,9 +35,19 @@ const Header = styled.div`
     background-color: #CDCDCD;
 `
 
+const InvitationsList = styled.div`
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); 
+    gap: 10px; 
+    padding: 10px; 
+    align-items: start; 
+`;
+
+
 
 export default {
     GroupContainer,
     ChatGrid,
-    Header
+    Header,
+    InvitationsList
 }

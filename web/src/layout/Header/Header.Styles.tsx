@@ -10,7 +10,7 @@ const Container = styled.div<CustomSidebarProps>`
     color: white !important;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
 `;
 

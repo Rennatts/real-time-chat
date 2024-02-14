@@ -7,7 +7,7 @@ import ChatRoom from '../../components/ChatRoom/ChatRoom';
 import Styles from './ChartsPage.Styles'
 import { Stack, Typography } from '@mui/material';
 import { useChat } from '../../context/chatContext';
-import BasicCard from '../../components/Card/BasicCard';
+import InvitationCard from '../../components/InvitationCard/InvitationCard';
 
 type Invitation = {
   invitationId: string;
@@ -122,13 +122,12 @@ function ChatsPage() {
 
     return (
       <div>
-        <Header onClick={handleOpenModal} isOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
+        <Header invitationsNumber={invitations.length} onClick={handleOpenModal} isOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
         <div>
           {invitations.length > 0 ? (
-            <div>
-              <Typography variant="h6">{invitations.length} convites recebidos</Typography>
+            <Styles.InvitationsList>
               {invitations.map((invitation, index) => (
-              <BasicCard 
+              <InvitationCard 
                 key={index}
                 roomName={invitation.roomName}
                 senderName={invitation.senderName}
@@ -139,9 +138,9 @@ function ChatsPage() {
                 recipientId={invitation.recipientId}
               />
               ))}
-            </div>
+            </Styles.InvitationsList>
           ) : (
-            <Typography variant="h6">0 convites recebidos</Typography>
+            <></>
           )}
         </div>
         <div>

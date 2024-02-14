@@ -13,20 +13,20 @@ type InvitationProps = {
   senderName: string;
   recipientId: string;
 };
-
-export default function BasicCard({ roomName, senderName, onAccept }: InvitationProps) {
+export default function InvitationCard({ roomName, senderName, onAccept }: InvitationProps) {
   return (
     <Card 
-    sx={{ 
-      width: '30%',
-      minWidth: 175, 
-      marginBottom: 2, 
-      border: '1px solid', 
-      borderColor: 'primary.main', 
-      borderRadius: '8px', 
-    }}>
+      sx={{ 
+        width: '100%',
+        height: 'auto',
+        marginBottom: 2, 
+        border: '1px solid', 
+        borderColor: 'primary.main', 
+        borderRadius: '8px', 
+      }}
+    >
       <CardContent>
-        <Typography variant="h5" component="div">
+        <Typography variant="subtitle1" component="div">
           Convite para o Chat {roomName}
         </Typography>
         <Typography sx={{ mb: 1.5 }} color="text.secondary">
@@ -39,3 +39,4 @@ export default function BasicCard({ roomName, senderName, onAccept }: Invitation
     </Card>
   );
 }
+
