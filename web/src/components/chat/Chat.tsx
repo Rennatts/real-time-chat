@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import io from 'socket.io-client';
-
-const socket = io('http://localhost:4000');
+import { Box, TextField } from '@mui/material';
+import { useSocket } from '../../context/socketContext';
+import Styles from './Chat.Styles';
+import Button from '../common/Button/Button';
 
 interface UserData {
     name?: string;
@@ -11,54 +12,74 @@ interface UserData {
 
 type ChatProps = {
     userData: UserData; 
+    roomId?: string;
 };
 
-function Chat({ userData }: ChatProps) {
+function Chat({ userData, roomId }: ChatProps) {
+    const socket = useSocket(); 
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState<{name: string, text: string}[]>([]);
 
-    useEffect(() => {
-        socket.on('connect', () => {
-            console.log('Connected to server');
-        });
-    
-        const handleNewMessage = (newMessage: any) => {
-            setMessages((msgs) => [...msgs, newMessage]);
-        };
-    
-        socket.on('message', handleNewMessage);
-    
-        return () => {
-            socket.off('message', handleNewMessage);
-        };
-    }, []);
 
-    const sendMessage = (event: any) => {
+    useEffect(() => {
+        if (!socket || !roomId) return;
+    
+        const handleNewMessage = (data: any) => {
+            console.log("data", data)
+            if (data.roomId === roomId) {
+                setMessages((msgs) => [...msgs, { name: data.senderName, text: data.text }]);
+            }
+        };
+    
+        socket.on('messageFromRoom', handleNewMessage);
+       
+        return () => {
+          socket.off('messageFromRoom', handleNewMessage);
+        };
+    }, [socket, roomId]);
+    
+
+    const sendMessageToRoom = (event: any) => {
         event.preventDefault();
-        if (message) {
-            socket.emit('createMessage', { name: userData.name, text: message }); 
+        
+        if (socket == null) return; 
+        if (roomId && message && userData.id) {
+            socket.emit('sendMessageToRoom', { 
+                roomId, 
+                message, 
+                senderId: userData.id, 
+                senderName: userData.name 
+            });
             setMessage('');
         }
-    };
-
+    }
 
     return (
-        <div>
-            <ul>
-                {messages.map((message, index) => (
-                    <li key={index}>{message.name}: {message.text}</li>
-                ))}
-            </ul>
-            <form onSubmit={sendMessage}>
-                <input
+        <Styles.Container>
+            <Styles.ChatBody>
+                <ul>
+                    {messages.map((message, index) => (
+                        <li key={index}>{message.name}: {message.text}</li>
+                    ))}
+                </ul>
+            </Styles.ChatBody>
+            <Box 
+            sx={{
+                display: 'flex', 
+                flexDirection: 'column', 
+                gap: 2, 
+            }}
+            component="form" 
+            onSubmit={sendMessageToRoom}>
+                <TextField
                 type="text"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Digite sua mensagem aqui..."
                 />
-                <button type="submit">Enviar</button>
-            </form>
-        </div>
+                <Button text="Enviar" type="submit"></Button>
+            </Box>
+        </Styles.Container>
     );
 }
 

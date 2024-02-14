@@ -46,7 +46,7 @@ function ChatRoom({ roomId, roomName }: Chat) {
       
   return (
     <Styles.MainContainer>
-        <Avatar {...stringAvatar(`{name}`)}/>
+        <Avatar {...stringAvatar(roomName)}/>
         <Styles.Text>{roomName}</Styles.Text>
     </Styles.MainContainer>
   )

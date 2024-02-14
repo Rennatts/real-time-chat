@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import GenericChat from '../../components/chat/GenericChat/GenericChat';
 import { useUserContext } from '../../context/userContext';
 import { useSocket } from '../../context/socketContext';
 import { Autocomplete, Button, TextField, Typography } from '@mui/material';
@@ -8,6 +7,7 @@ import { useFetchAllUsers } from '../../hooks/useFetchAllUsers';
 
 
 import Styles from './ChatRoomPage.Styles';
+import Chat from '../../components/chat/Chat';
 
 function ChatRoomPage() {
     const socket = useSocket();
@@ -43,7 +43,7 @@ function ChatRoomPage() {
                 <Button onClick={handleLeaveChatRoom}>Leave Chat Room</Button>
             </Styles.Header>
             <Styles.ChatContainer>
-                <GenericChat userData={userData} roomId={state.roomId!}/>
+                <Chat userData={userData} roomId={state.roomId!}/>
             </Styles.ChatContainer>
             <Styles.InviteBox>
                 <Typography variant="h6" component="h2">
