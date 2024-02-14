@@ -59,26 +59,39 @@ function Chat({ userData, roomId }: ChatProps) {
             <Styles.ChatBody>
                 <ul>
                     {messages.map((message, index) => (
-                        <li key={index}>{message.name}: {message.text}</li>
+                        <Styles.Message key={index}>{message.name}: {message.text}</Styles.Message>
                     ))}
                 </ul>
             </Styles.ChatBody>
             <Box 
             sx={{
                 display: 'flex', 
-                flexDirection: 'column', 
-                gap: 2, 
+                flexDirection: 'row',
+                alignItems: 'center', 
+                marginTop: '1%',
             }}
             component="form" 
-            onSubmit={sendMessageToRoom}>
+            onSubmit={sendMessageToRoom}
+            >
                 <TextField
                 type="text"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Digite sua mensagem aqui..."
+                sx={{
+                    flexGrow: 1,
+                    height: 56, 
+                    '& .MuiInputBase-root': {
+                      height: '100%', 
+                    },
+                    '& .MuiOutlinedInput-input': {
+                      padding: '10px 14px', 
+                    },
+                }}
                 />
-                <Button text="Enviar" type="submit"></Button>
+                <Button text="Enviar" type="submit" sx={{ height: '56px' }}></Button>
             </Box>
+
         </Styles.Container>
     );
 }

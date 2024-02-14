@@ -39,30 +39,32 @@ function ChatRoomPage() {
     return (
         <Styles.Container>
             <Styles.Header>
+                <Button onClick={()=> navigate('/')}>Go back</Button>
                 <h2>Chat {state.roomName}</h2>
                 <Button onClick={handleLeaveChatRoom}>Leave Chat Room</Button>
             </Styles.Header>
             <Styles.ChatContainer>
                 <Chat userData={userData} roomId={state.roomId!}/>
+                <Styles.InviteBox>
+                    <Typography variant="h6" component="h2">
+                        Invite Users to the chat
+                    </Typography>
+                    <Autocomplete
+                        sx={{ width: '70%' }} 
+                        options={users}
+                        getOptionLabel={(option) => option.name}
+                        renderInput={(params) => (
+                            <TextField 
+                            {...params} 
+                            label="Search users" 
+                            variant="outlined" />
+                        )}
+                        onChange={(event, value) => setSelectedUserId(value ? value.id : '')}
+                    />
+                    <Button onClick={handleSentInvite}>Send Invite</Button>
+                </Styles.InviteBox>
+                
             </Styles.ChatContainer>
-            <Styles.InviteBox>
-                <Typography variant="h6" component="h2">
-                    Invite Users to the chat
-                </Typography>
-                <Autocomplete
-                    sx={{ width: '70%' }} 
-                    options={users}
-                    getOptionLabel={(option) => option.name}
-                    renderInput={(params) => (
-                        <TextField 
-                        {...params} 
-                        label="Search users" 
-                        variant="outlined" />
-                    )}
-                    onChange={(event, value) => setSelectedUserId(value ? value.id : '')}
-                />
-                <Button onClick={handleSentInvite}>Send Invite</Button>
-            </Styles.InviteBox>
         </Styles.Container>
     );
 }

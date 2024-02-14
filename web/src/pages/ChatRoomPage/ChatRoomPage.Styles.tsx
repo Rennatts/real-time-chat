@@ -12,7 +12,7 @@ const Container = styled.div`
 
 const Header = styled.div`
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     width: 100%;
     padding: 1%;
@@ -25,6 +25,7 @@ const ChatContainer  = styled.div`
     align-items: center;
     flex-direction: column;
     min-height: 200px;
+    width: 60%;
     height: auto;
     
 `;
@@ -34,7 +35,7 @@ const InviteBox  = styled.div`
     justify-items: center;
     align-items: center;
     flex-direction: column;
-    width: 70%;
+    width: 100%;
     margin-top: 8%;
 `;
 

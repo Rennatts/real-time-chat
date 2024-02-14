@@ -1,5 +1,5 @@
 import { Avatar } from '@mui/material';
-import Styles from './ChatRoom.Styles';
+import Styles from './ChatRoomCard.Styles';
 
 
 interface Chat {
@@ -8,7 +8,7 @@ interface Chat {
   description: string;
 }
 
-function ChatRoom({ roomId, roomName }: Chat) {
+function ChatRoomCard({ roomId, roomName }: Chat) {
 
     function stringToColor(string: string) {
         let hash = 0;
@@ -52,4 +52,4 @@ function ChatRoom({ roomId, roomName }: Chat) {
   )
 }
 
-export default ChatRoom
+export default ChatRoomCard

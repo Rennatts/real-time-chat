@@ -3,9 +3,9 @@ import Header from '../../layout/Header/Header'
 import CreateChatRoom from '../../components/CreateChatRoom/CreateChatRoom';
 import { useNavigate } from 'react-router-dom';
 import { useSocket } from '../../context/socketContext';
-import ChatRoom from '../../components/ChatRoom/ChatRoom';
+import ChatRoomCard from '../../components/ChatRoom/ChatRoomCard';
 import Styles from './ChartsPage.Styles'
-import { Stack, Typography } from '@mui/material';
+import { Stack } from '@mui/material';
 import { useChat } from '../../context/chatContext';
 import InvitationCard from '../../components/InvitationCard/InvitationCard';
 
@@ -150,7 +150,7 @@ function ChatsPage() {
           <Styles.ChatGrid>
             {rooms.map((chat: any, index: any) => (
               <Stack direction="row" spacing={1} key={index} onClick={() => handleJoinChat(chat.roomId)}>
-                  <ChatRoom {...chat}></ChatRoom>
+                  <ChatRoomCard {...chat}></ChatRoomCard>
               </Stack>
             ))}
           </Styles.ChatGrid>
