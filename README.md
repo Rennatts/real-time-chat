@@ -27,7 +27,7 @@ A step-by-step series of examples that tell you how to get a development environ
 
    ```bash
    git clone git@github.com:Rennatts/real-time-chat.git
-   cd your-project
+   cd real-time-chat
 
 2. Build and run the containers using Docker Compose:
    ```bash
