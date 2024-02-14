@@ -9,6 +9,15 @@ import { Stack, Typography } from '@mui/material';
 import { useChat } from '../../context/chatContext';
 import BasicCard from '../../components/Card/BasicCard';
 
+type Invitation = {
+  invitationId: string;
+  recipientId:  string;
+  roomId:  string;
+  roomName:  string;
+  senderId:  string;
+  senderName:  string;
+}
+
 function ChatsPage() {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const navigate = useNavigate();
@@ -66,14 +75,14 @@ function ChatsPage() {
       socket.emit('joinRoom', { roomId });
     };
 
-    const handleJoinChatRoom = (invitation: any) => {
+    const handleJoinChatRoom = (invitation: Invitation) => {
+      console.log("invitation", invitation)
       if (!socket) {
           console.error("Socket não está conectado.");
           return;
       }
 
-      socket.emit('acceptInvitation', invitation.invitationId);
-      //socket.emit('joinRoom', { roomId });
+      socket.emit('joinRoom', { roomId: invitation.roomId });
   
       navigate(`/chatroom/${invitation.roomId}`, {state:{ roomId: invitation.roomId, roomName: invitation.roomName }});
     };
