@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
-import io from 'socket.io-client';
 import { useSocket } from '../../../context/socketContext';
 import Styles from './GenericChat.Styles'
 import { Box, TextField } from '@mui/material';
 import Button from '../../common/Button/Button';
 
-const socket = io('http://localhost:4000');
 
 interface UserData {
     name?: string;
@@ -23,25 +21,29 @@ function GenericChat({ userData, roomId }: ChatProps) {
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState<{name: string, text: string}[]>([]);
 
+
     useEffect(() => {
         if (!socket || !roomId) return;
-
+    
         const handleNewMessage = (data: any) => {
-            console.log("AQUI", data)
+            console.log("data", data)
             if (data.roomId === roomId) {
                 setMessages((msgs) => [...msgs, { name: data.senderName, text: data.text }]);
             }
         };
-
+    
         socket.on('messageFromRoom', handleNewMessage);
-      
+       
         return () => {
-          socket.off('messageFromRoom');
+          socket.off('messageFromRoom', handleNewMessage);
         };
-    }, [socket, roomId]); 
+    }, [socket, roomId]);
+    
 
     const sendMessageToRoom = (event: any) => {
         event.preventDefault();
+
+        console.log("estou aqui")
         
         if (socket == null) return; 
         if (roomId && message && userData.id) {
@@ -53,7 +55,7 @@ function GenericChat({ userData, roomId }: ChatProps) {
             });
             setMessage('');
         }
-    };
+    }
 
     return (
         <Styles.Container>

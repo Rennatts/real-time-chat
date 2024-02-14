@@ -1,10 +1,5 @@
 import styled from 'styled-components';
 
-
-interface CustomButtonProps {
-    customColor?: string; 
-}
-
 const Text  = styled.p`
     color: black;
 `

@@ -1,24 +1,21 @@
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import GenericChat from '../../components/chat/GenericChat/GenericChat';
 import { useUserContext } from '../../context/userContext';
 import { useSocket } from '../../context/socketContext';
-import { Autocomplete, Button, Stack, TextField, Typography } from '@mui/material';
+import { Autocomplete, Button, TextField, Typography } from '@mui/material';
 import { useFetchAllUsers } from '../../hooks/useFetchAllUsers';
-import { useChat } from '../../context/chatContext';
+
 
 import Styles from './ChatRoomPage.Styles';
 
 function ChatRoomPage() {
     const socket = useSocket();
-    const navigate = useNavigate();
     const { userData } = useUserContext();
     const location = useLocation();
     const { state } = location;
-    const { users, loading, error } = useFetchAllUsers();
+    const { users} = useFetchAllUsers();
     const [selectedUserId, setSelectedUserId] = useState<string>('');
-    const { addInvitation, invitations } = useChat(); 
-    const [buttonPressedIndex, setButtonPressedIndex] = useState<number | null>(null);
 
 
     const handleSentInvite = () => {
@@ -36,9 +33,6 @@ function ChatRoomPage() {
         if (!socket || !state || !userData.id) return;
         socket.emit('leaveRoom', state.id);
     };
-
-
-
 
     return (
         <Styles.Container>

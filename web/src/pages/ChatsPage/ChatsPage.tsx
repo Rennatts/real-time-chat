@@ -7,7 +7,6 @@ import ChatRoom from '../../components/ChatRoom/ChatRoom';
 import Styles from './ChartsPage.Styles'
 import { Stack, Typography } from '@mui/material';
 import { useChat } from '../../context/chatContext';
-import Button from '../../components/common/Button/Button';
 import BasicCard from '../../components/Card/BasicCard';
 
 function ChatsPage() {
@@ -15,7 +14,6 @@ function ChatsPage() {
     const navigate = useNavigate();
     const socket = useSocket(); 
     const { rooms, addRoom } = useChat();
-    const [buttonPressedIndex, setButtonPressedIndex] = useState<number | null>(null);
     const { addInvitation, invitations } = useChat();
 
     const handleOpenModal = () => setIsModalOpen(true);
@@ -45,8 +43,9 @@ function ChatsPage() {
 
 
       socket.on('roomJoined', (data: any) => {
+        console.log("--data--", data)
         if(data.roomId){
-          navigate(`/chatroom/${data.roomId}`,  {state:{ ...data }});
+          navigate(`/chatroom/${data.roomId}`,  {state:{ roomId: data.roomId, roomName: data.roomName }});
         }
       });
     
@@ -76,11 +75,7 @@ function ChatsPage() {
       socket.emit('acceptInvitation', invitation.invitationId);
       //socket.emit('joinRoom', { roomId });
   
-      navigate(`/chatroom/${invitation.roomId}`, {state:{ ...invitation }});
-    };
-
-    const handleInvitationClick = (index: any) => {
-        setButtonPressedIndex(index);
+      navigate(`/chatroom/${invitation.roomId}`, {state:{ roomId: invitation.roomId, roomName: invitation.roomName }});
     };
 
     useEffect(() => {
@@ -112,7 +107,7 @@ function ChatsPage() {
       return () => {
           socket.off('invitationReceived', handleReceiveInvitation);
       };
-    }, [socket, addInvitation]); 
+    }, [socket, addInvitation, invitations]); 
 
     return (
       <div>

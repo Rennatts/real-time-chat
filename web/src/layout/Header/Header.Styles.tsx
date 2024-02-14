@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Button as MuiButton } from '@mui/material';
 
 interface CustomSidebarProps {
     customColor?: string; 

@@ -20,7 +20,7 @@ import Styled from './Sidebar.Styles';
 import { useNavigate } from 'react-router-dom';
 
 export default function Sidebar() {
-    const { accessToken, userData } = useUserContext();
+    const { accessToken } = useUserContext();
     const navigate = useNavigate();
     const logoutUser = useLogoutUser();
   
@@ -59,16 +59,6 @@ export default function Sidebar() {
                 <ListItemText primary={'Home'} />
                 </ListItemButton>
             </ListItem>
-            {/* {['Chats', 'Search'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-                <ListItemButton>
-                <ListItemIcon>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-                </ListItemButton>
-            </ListItem>
-            ))} */}
         </List>
         <Divider />
         {userLoggedIn ? 
@@ -106,16 +96,6 @@ export default function Sidebar() {
                     <ListItemText primary={'Logout'} />
                     </ListItemButton>
                 </ListItem>
-                {/* {['All mail', 'Trash'].map((text, index) => (
-                <ListItem key={text} disablePadding>
-                    <ListItemButton>
-                    <ListItemIcon>
-                        {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                    </ListItemIcon>
-                    <ListItemText primary={text} />
-                    </ListItemButton>
-                </ListItem>
-                ))} */}
             </List>
         ) 
         : 

@@ -14,6 +14,9 @@ export class MessagesService {
   private invitations: Invitation[] = [];
   private userToSocketMap = new Map<string, string>(); 
 
+  
+
+
 
 
   identify(name: string, clientId: string){
@@ -44,7 +47,6 @@ export class MessagesService {
         messages: [] 
     };
     this.rooms.push(room);
-    console.log("ddddd", this.rooms)
     return room;
   }
 
@@ -98,12 +100,14 @@ export class MessagesService {
 
 
   sendMessageToRoom(sendMessageToChatRoomDto: SendMessageToChatRoomDto): Message {
+    console.log("sendMessageToChatRoomDto", sendMessageToChatRoomDto)
     const room = this.rooms.find(room => room.roomId === sendMessageToChatRoomDto.roomId);
     if (!room) {
         throw new Error('Room does not exist');
     }
 
     const senderSocketId = this.getSocketIdByUserId(sendMessageToChatRoomDto.senderId);
+    console.log("senderSocketId", senderSocketId)
     const newMessage: Message = {
       senderId: senderSocketId,
       senderName: sendMessageToChatRoomDto.senderName, 
@@ -112,8 +116,6 @@ export class MessagesService {
     };
 
     room.messages.push(newMessage);
-    console.log("---------", room, "------")
-    console.log("========", this.roomParticipants[room.roomId])
     return newMessage; 
   }
 
@@ -122,7 +124,6 @@ export class MessagesService {
   createInvitation(roomId: string, senderId: string, recipientId: string, senderName: string): Invitation {
     // const foundRoom = this.rooms.find(room => room.roomId === roomId)?.roomName
     const foundRoom = this.findRoomById(roomId);
-    console.log("foundRoom", foundRoom)
     const invitation: Invitation = {
       invitationId: Math.random().toString(36).substring(7),
       roomId,
@@ -132,9 +133,15 @@ export class MessagesService {
       senderName
     };
     this.invitations.push(invitation);
-    console.log("invitation", invitation)
 
     return invitation;
+  }
+
+  getRoomsForUser(userId: string): ChatRoom[] {
+    return this.rooms.filter(room => {
+      const participants = this.roomParticipants[room.roomId];
+      return participants?.has(userId);
+    });
   }
 
 
@@ -148,6 +155,15 @@ export class MessagesService {
 
   getSocketIdByUserId(userId: string): string | undefined {
     return this.userToSocketMap.get(userId);
+  }
+
+  getUsersInRoom(roomId: string): string[] | any[] {
+    const participants = this.roomParticipants[roomId];
+    if (!participants) {
+      throw new Error('Room not found');
+    }
+  
+    return Array.from(participants);
   }
 
 }
