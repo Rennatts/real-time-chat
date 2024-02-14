@@ -8,7 +8,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { PiChatsCircle } from "react-icons/pi";
 import { IoIosSearch } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
 import { IoLogOutOutline } from "react-icons/io5";
@@ -16,8 +15,10 @@ import AccessAlarmIcon from '@mui/icons-material/NavigateNextSharp';
 import { useLogoutUser } from '../../hooks/useLogoutUser';
 import { useUserContext } from '../../context/userContext';
 import { IoHomeOutline } from "react-icons/io5";
-import Styled from './Sidebar.Styles';
 import { useNavigate } from 'react-router-dom';
+
+import Styled from './Sidebar.Styles';
+
 
 export default function Sidebar() {
     const { accessToken } = useUserContext();
@@ -64,14 +65,6 @@ export default function Sidebar() {
         {userLoggedIn ? 
         (
             <List>
-                <ListItem disablePadding>
-                    <ListItemButton onClick={()=> navigate('/chats')}>
-                        <ListItemIcon>
-                            <PiChatsCircle size={25}/>
-                        </ListItemIcon>
-                        <ListItemText primary={'Chats'} />
-                    </ListItemButton>
-                </ListItem>
                 <ListItem disablePadding>
                     <ListItemButton>
                     <ListItemIcon>

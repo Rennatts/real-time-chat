@@ -26,7 +26,6 @@ function App() {
                   <Route path="/" element={<HomePage />} />
                   <Route path="/login" element={<LoginPage />} />
                   <Route path="/signup" element={<SignupPage />} />
-                  <Route path="/chats" element={<ChatsPage />} />
                   <Route path="/chatroom/:roomId" element={<ChatRoomPage/>}></Route>
                 </Routes>
               </div>

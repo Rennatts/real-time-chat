@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import GenericChat from '../../components/chat/GenericChat/GenericChat';
 import { useUserContext } from '../../context/userContext';
 import { useSocket } from '../../context/socketContext';
@@ -15,6 +15,7 @@ function ChatRoomPage() {
     const location = useLocation();
     const { state } = location;
     const { users} = useFetchAllUsers();
+    const navigate = useNavigate();
     const [selectedUserId, setSelectedUserId] = useState<string>('');
 
 
@@ -32,6 +33,7 @@ function ChatRoomPage() {
     const handleLeaveChatRoom = () => {
         if (!socket || !state || !userData.id) return;
         socket.emit('leaveRoom', state.id);
+        navigate('/chats');
     };
 
     return (
