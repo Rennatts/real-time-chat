@@ -103,7 +103,6 @@ export class MessagesService {
     }
 
     const senderSocketId = this.getSocketIdByUserId(sendMessageToChatRoomDto.senderId);
-    console.log("senderSocketId", senderSocketId)
     const newMessage: Message = {
       senderId: senderSocketId,
       senderName: sendMessageToChatRoomDto.senderName, 
@@ -143,9 +142,6 @@ export class MessagesService {
   }
 
   getSocketIdByUserId(userId: string): string | undefined {
-    console.log("this.userToSocketMap.get(userId)",  this.userToSocketMap.get(userId))
-    console.log("userId",  this.userToSocketMap.get(userId))
-    console.log("-----",  this.userToSocketMap)
     return this.userToSocketMap.get(userId);
   }
 

@@ -41,8 +41,10 @@ export class MessagesGateway {
   async joinRoom(
     @MessageBody('roomId') roomId: string, 
     @ConnectedSocket() client: Socket) {
+      console.log("roomId", roomId)
     try {
         const result = await this.messagesService.joinRoom(roomId, client.id);
+
         client.join(roomId);
 
         this.server.to(client.id).emit('roomJoined', result);
@@ -111,16 +113,15 @@ export class MessagesGateway {
   async sendInvitation(
     @MessageBody() data: { roomId: string, recipientId: string, senderName: string }, 
     @ConnectedSocket() client: Socket) {
-      console.log("-----data----", data)
-      console.log("-----client----", client.id)
+
     const recipientSocketId = this.messagesService.getSocketIdByUserId(data.recipientId);
-    console.log("recipientSocketId", recipientSocketId)
+
     if (!recipientSocketId) {
       console.error('Recipient not connected');
       return;
     }
     const invitation = this.messagesService.createInvitation(data.roomId, client.id, recipientSocketId, data.senderName);
-    console.log("invitation", invitation)
+
     this.server.to(recipientSocketId).emit('invitationReceived', invitation);
     return invitation;
   }
@@ -131,7 +132,6 @@ export class MessagesGateway {
     @MessageBody() invitationId: string, 
     @ConnectedSocket() client: Socket) {
     const invitation = this.messagesService.getInvitation(invitationId);
-    console.log("invitation", invitation)
 
     if (!invitation) {
       throw new WsException('Invitation not found');

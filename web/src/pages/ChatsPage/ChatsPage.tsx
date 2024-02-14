@@ -44,7 +44,6 @@ function ChatsPage() {
 
 
       socket.on('roomJoined', (data: any) => {
-        console.log('Data received:', data);
         if(data.roomId){
           navigate(`/chatroom/${data.roomId}`,  {state:{ ...data }});
         }
@@ -68,13 +67,13 @@ function ChatsPage() {
     };
 
     const handleJoinChatRoom = (invitation: any) => {
-      console.log("invitation", invitation)
       if (!socket) {
           console.error("Socket não está conectado.");
           return;
       }
 
       socket.emit('acceptInvitation', invitation.invitationId);
+      //socket.emit('joinRoom', { roomId });
   
       navigate(`/chatroom/${invitation.roomId}`, {state:{ ...invitation }});
     };
@@ -87,7 +86,6 @@ function ChatsPage() {
       if (!socket) return;
 
       const handleEnterChatRoom = (data: any) => {
-          console.log("----OOOOO----", data);
       };
 
       socket.on('newMemberJoined', handleEnterChatRoom);
@@ -101,7 +99,6 @@ function ChatsPage() {
       if (!socket) return;
 
       const handleReceiveInvitation = (invitation: any) => {
-          console.log("here", invitation)
           addInvitation(invitation);
       };
 

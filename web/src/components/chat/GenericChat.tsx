@@ -22,8 +22,6 @@ function GenericChat({ userData, roomId }: ChatProps) {
 
     useEffect(() => {
         if (!socket || !roomId) return;
-        console.log("socket", socket)
-        console.log("roomId", roomId)
 
         const handleNewMessage = (data: any) => {
             console.log("AQUI", data)
@@ -38,8 +36,6 @@ function GenericChat({ userData, roomId }: ChatProps) {
           socket.off('messageFromRoom');
         };
     }, [socket, roomId]); 
-
-    console.log("messages", messages)
 
     const sendMessageToRoom = (event: any) => {
         event.preventDefault();
