@@ -35,6 +35,8 @@ A step-by-step series of examples that tell you how to get a development environ
     docker-compose up --build
 
 
+###OPEN http://localhost:3050
+
 3. Another method to run the project is:
    ```
    //In one terminal
