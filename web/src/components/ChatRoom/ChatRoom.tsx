@@ -3,12 +3,12 @@ import Styles from './ChatRoom.Styles';
 
 
 interface Chat {
-    roomId: string;
-    name: string;
-    description: string;
+  roomId: string;
+  roomName: string;
+  description: string;
 }
 
-function ChatRoom({ roomId, name, description }: Chat) {
+function ChatRoom({ roomId, roomName }: Chat) {
 
     function stringToColor(string: string) {
         let hash = 0;
@@ -47,7 +47,7 @@ function ChatRoom({ roomId, name, description }: Chat) {
   return (
     <Styles.MainContainer>
         <Avatar {...stringAvatar(`{name}`)}/>
-        <Styles.Text>{name}</Styles.Text>
+        <Styles.Text>{roomName}</Styles.Text>
     </Styles.MainContainer>
   )
 }

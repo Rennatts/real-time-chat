@@ -7,7 +7,7 @@ import Sidebar from "./layout/Sidebar/Sidebar";
 import ChatsPage from './pages/ChatsPage/ChatsPage';
 
 import './App.css';
-import ChatRoomPage from './pages/ChatRoomPage';
+import ChatRoomPage from './pages/ChatRoomPage/ChatRoomPage';
 import { SocketProvider } from "./context/socketContext";
 import WebSocketAuthHandler from "./context/webSocketAuthHandler";
 import { ChatProvider } from "./context/chatContext";

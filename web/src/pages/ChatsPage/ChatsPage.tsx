@@ -5,9 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import { useSocket } from '../../context/socketContext';
 import ChatRoom from '../../components/ChatRoom/ChatRoom';
 import Styles from './ChartsPage.Styles'
-import { Stack } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { useChat } from '../../context/chatContext';
 import Button from '../../components/common/Button/Button';
+import BasicCard from '../../components/Card/BasicCard';
 
 function ChatsPage() {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -95,6 +96,8 @@ function ChatsPage() {
       };
     }, [socket]); 
 
+    console.log("rooms", rooms)
+
     useEffect(() => {
       if (!socket) return;
 
@@ -114,36 +117,41 @@ function ChatsPage() {
     return (
       <div>
         <Header onClick={handleOpenModal} isOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
-        Chats
-        <div>Invitations received
-          {invitations.length > 0 ?
-          (
-          <ul>
+        <div>
+          {invitations.length > 0 ? (
+            <div>
+              <Typography variant="h6">{invitations.length} convites recebidos</Typography>
               {invitations.map((invitation, index) => (
-                  <div key={index}>
-                      <li onClick={() => handleInvitationClick(index)}>
-                          convite recebido para o chat {invitation.roomName}, convidado por {invitation.senderName}
-                      </li>
-                      {buttonPressedIndex === index && (
-                          <Button text="Entrar?" onClick={() => handleJoinChatRoom(invitation)}></Button>
-                      )}
-                  </div>
+              <BasicCard 
+                key={index}
+                roomName={invitation.roomName}
+                senderName={invitation.senderName}
+                onAccept={() => handleJoinChatRoom(invitation)}
+                invitationId={invitation.invitationId}
+                roomId={invitation.roomId}
+                senderId={invitation.senderId}
+                recipientId={invitation.recipientId}
+              />
               ))}
-          </ul>
-          )
-          :
-          (<></>)
-          }
+            </div>
+          ) : (
+            <Typography variant="h6">0 convites recebidos</Typography>
+          )}
         </div>
-        <Styles.ChatGrid>
-          {rooms.map((chat: any, index: any) => ( // Use rooms from context
-            <Stack direction="row" spacing={1} key={index} onClick={() => handleJoinChat(chat.roomId)}>
-                <ChatRoom {...chat}></ChatRoom>
-            </Stack>
-          ))}
-        </Styles.ChatGrid>
+        <div>
+          <Styles.Header>
+            <h3>Todos os chats</h3>
+          </Styles.Header>
+          <Styles.ChatGrid>
+            {rooms.map((chat: any, index: any) => (
+              <Stack direction="row" spacing={1} key={index} onClick={() => handleJoinChat(chat.roomId)}>
+                  <ChatRoom {...chat}></ChatRoom>
+              </Stack>
+            ))}
+          </Styles.ChatGrid>
 
-        <CreateChatRoom isOpen={isModalOpen} onClose={handleCloseModal} onSubmit={handleCreateChatRoom} />
+          <CreateChatRoom isOpen={isModalOpen} onClose={handleCloseModal} onSubmit={handleCreateChatRoom} />
+        </div>
       </div>
     )
 }

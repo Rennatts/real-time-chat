@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import GenericChat from '../components/chat/GenericChat';
-import { useUserContext } from '../context/userContext';
-import { useSocket } from '../context/socketContext';
-import Button from '../components/common/Button/Button';
-import { Autocomplete, Stack, TextField } from '@mui/material';
-import { useFetchAllUsers } from '../hooks/useFetchAllUsers';
-import { useChat } from '../context/chatContext';
+import GenericChat from '../../components/chat/GenericChat/GenericChat';
+import { useUserContext } from '../../context/userContext';
+import { useSocket } from '../../context/socketContext';
+import { Autocomplete, Button, Stack, TextField, Typography } from '@mui/material';
+import { useFetchAllUsers } from '../../hooks/useFetchAllUsers';
+import { useChat } from '../../context/chatContext';
+
+import Styles from './ChatRoomPage.Styles';
 
 function ChatRoomPage() {
     const socket = useSocket();
@@ -40,22 +41,33 @@ function ChatRoomPage() {
 
 
     return (
-        <div>
-            <GenericChat userData={userData} roomId={state.roomId!}/>
-            <Button text="Leave Chat Room" onClick={handleLeaveChatRoom} />
-            <Stack>
-                <h1>Invite Users to the chat</h1>
+        <Styles.Container>
+            <Styles.Header>
+                <h2>Chat {state.roomName}</h2>
+                <Button onClick={handleLeaveChatRoom}>Leave Chat Room</Button>
+            </Styles.Header>
+            <Styles.ChatContainer>
+                <GenericChat userData={userData} roomId={state.roomId!}/>
+            </Styles.ChatContainer>
+            <Styles.InviteBox>
+                <Typography variant="h6" component="h2">
+                    Invite Users to the chat
+                </Typography>
                 <Autocomplete
+                    sx={{ width: '70%' }} 
                     options={users}
                     getOptionLabel={(option) => option.name}
                     renderInput={(params) => (
-                        <TextField {...params} label="Search users" variant="outlined" />
+                        <TextField 
+                        {...params} 
+                        label="Search users" 
+                        variant="outlined" />
                     )}
                     onChange={(event, value) => setSelectedUserId(value ? value.id : '')}
                 />
-                <Button text="Send Invite" onClick={handleSentInvite} />
-            </Stack>
-        </div>
+                <Button onClick={handleSentInvite}>Send Invite</Button>
+            </Styles.InviteBox>
+        </Styles.Container>
     );
 }
 

@@ -22,10 +22,22 @@ const ChatGrid =styled.li<CustomProps>`
     grid-template-columns: 0.2fr 0.2fr 0.2fr 0.2fr;
     grid-gap: 1.2em;
     cursor: pointer;
+    margin-top: 3%;
+`
+
+const Header = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 1%;
+    margin-top: 2%;
+    background-color: #CDCDCD;
 `
 
 
 export default {
     GroupContainer,
-    ChatGrid
+    ChatGrid,
+    Header
 }

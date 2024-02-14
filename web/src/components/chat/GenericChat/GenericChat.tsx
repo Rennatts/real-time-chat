@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
-import { useSocket } from '../../context/socketContext';
+import { useSocket } from '../../../context/socketContext';
+import Styles from './GenericChat.Styles'
+import { Box, TextField } from '@mui/material';
+import Button from '../../common/Button/Button';
 
 const socket = io('http://localhost:4000');
 
@@ -53,22 +56,31 @@ function GenericChat({ userData, roomId }: ChatProps) {
     };
 
     return (
-        <div>
-            <ul>
-                {messages.map((message, index) => (
-                    <li key={index}>{message.name}: {message.text}</li>
-                ))}
-            </ul>
-            <form onSubmit={sendMessageToRoom}>
-                <input
+        <Styles.Container>
+            <Styles.ChatBody>
+                <ul>
+                    {messages.map((message, index) => (
+                        <li key={index}>{message.name}: {message.text}</li>
+                    ))}
+                </ul>
+            </Styles.ChatBody>
+            <Box 
+            sx={{
+                display: 'flex', 
+                flexDirection: 'column', 
+                gap: 2, 
+            }}
+            component="form" 
+            onSubmit={sendMessageToRoom}>
+                <TextField
                 type="text"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Digite sua mensagem aqui..."
                 />
-                <button type="submit">Enviar</button>
-            </form>
-        </div>
+                <Button text="Enviar" type="submit"></Button>
+            </Box>
+        </Styles.Container>
     );
 }
 

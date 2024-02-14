@@ -59,22 +59,6 @@ export default function Sidebar() {
                 <ListItemText primary={'Home'} />
                 </ListItemButton>
             </ListItem>
-            <ListItem disablePadding>
-                <ListItemButton onClick={()=> navigate('/chats')}>
-                    <ListItemIcon>
-                        <PiChatsCircle size={25}/>
-                    </ListItemIcon>
-                    <ListItemText primary={'Chats'} />
-                </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-                <ListItemButton>
-                <ListItemIcon>
-                    <IoIosSearch size={25}/>
-                </ListItemIcon>
-                <ListItemText primary={'Search'} />
-                </ListItemButton>
-            </ListItem>
             {/* {['Chats', 'Search'].map((text, index) => (
             <ListItem key={text} disablePadding>
                 <ListItemButton>
@@ -90,6 +74,22 @@ export default function Sidebar() {
         {userLoggedIn ? 
         (
             <List>
+                <ListItem disablePadding>
+                    <ListItemButton onClick={()=> navigate('/chats')}>
+                        <ListItemIcon>
+                            <PiChatsCircle size={25}/>
+                        </ListItemIcon>
+                        <ListItemText primary={'Chats'} />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                    <ListItemButton>
+                    <ListItemIcon>
+                        <IoIosSearch size={25}/>
+                    </ListItemIcon>
+                    <ListItemText primary={'Search'} />
+                    </ListItemButton>
+                </ListItem>
                 <ListItem disablePadding>
                     <ListItemButton>
                     <ListItemIcon>
