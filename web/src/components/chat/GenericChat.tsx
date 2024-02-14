@@ -22,8 +22,11 @@ function GenericChat({ userData, roomId }: ChatProps) {
 
     useEffect(() => {
         if (!socket || !roomId) return;
+        console.log("socket", socket)
+        console.log("roomId", roomId)
 
-        const handleNewMessage = (data: { senderName: string, text: string, roomId: string }) => {
+        const handleNewMessage = (data: any) => {
+            console.log("AQUI", data)
             if (data.roomId === roomId) {
                 setMessages((msgs) => [...msgs, { name: data.senderName, text: data.text }]);
             }

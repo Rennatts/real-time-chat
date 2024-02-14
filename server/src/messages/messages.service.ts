@@ -90,7 +90,7 @@ export class MessagesService {
   searchRooms(query: string) {
     const lowercaseQuery = query.toLowerCase();
     return Array.from(this.rooms.values()).filter(room =>
-      room.name.toLowerCase().includes(lowercaseQuery) ||
+      room.roomName.toLowerCase().includes(lowercaseQuery) ||
       room.description.toLowerCase().includes(lowercaseQuery)
     );
   }
@@ -101,14 +101,19 @@ export class MessagesService {
     if (!room) {
         throw new Error('Room does not exist');
     }
+
+    const senderSocketId = this.getSocketIdByUserId(sendMessageToChatRoomDto.senderId);
+    console.log("senderSocketId", senderSocketId)
     const newMessage: Message = {
-      senderId: sendMessageToChatRoomDto.senderId,
+      senderId: senderSocketId,
       senderName: sendMessageToChatRoomDto.senderName, 
       text: sendMessageToChatRoomDto.message,
       roomId: sendMessageToChatRoomDto.roomId
     };
 
     room.messages.push(newMessage);
+    console.log("---------", room, "------")
+    console.log("========", this.roomParticipants[room.roomId])
     return newMessage; 
   }
 
@@ -118,7 +123,7 @@ export class MessagesService {
     const invitation: Invitation = {
       invitationId: Math.random().toString(36).substring(7),
       roomId,
-      roomName: this.rooms.find(room => room.roomId === roomId)?.name || 'Unknown Room',
+      roomName: this.rooms.find(room => room.roomId === roomId)?.roomName || 'Unknown Room',
       senderId,
       recipientId,
       senderName

@@ -17,20 +17,8 @@ function ChatRoomPage() {
     const { users, loading, error } = useFetchAllUsers();
     const [selectedUserId, setSelectedUserId] = useState<string>('');
     const { addInvitation, invitations } = useChat(); 
+    const [buttonPressedIndex, setButtonPressedIndex] = useState<number | null>(null);
 
-    useEffect(() => {
-        if (!socket || !state) return;
-
-        const handleReceiveInvitation = (invitation: any) => {
-            addInvitation(invitation);
-        };
-
-        socket.on('invitationReceived', handleReceiveInvitation);
-
-        return () => {
-            socket.off('invitationReceived', handleReceiveInvitation);
-        };
-    }, [socket, addInvitation]); 
 
     const handleSentInvite = () => {
         const roomId = state.roomId;
@@ -49,9 +37,11 @@ function ChatRoomPage() {
     };
 
 
+
+
     return (
         <div>
-            <GenericChat userData={userData} roomId={state.id!}/>
+            <GenericChat userData={userData} roomId={state.roomId!}/>
             <Button text="Leave Chat Room" onClick={handleLeaveChatRoom} />
             <Stack>
                 <h1>Invite Users to the chat</h1>

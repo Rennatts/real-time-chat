@@ -7,12 +7,15 @@ import ChatRoom from '../../components/ChatRoom/ChatRoom';
 import Styles from './ChartsPage.Styles'
 import { Stack } from '@mui/material';
 import { useChat } from '../../context/chatContext';
+import Button from '../../components/common/Button/Button';
 
 function ChatsPage() {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const navigate = useNavigate();
     const socket = useSocket(); 
     const { rooms, addRoom } = useChat();
+    const [buttonPressedIndex, setButtonPressedIndex] = useState<number | null>(null);
+    const { addInvitation, invitations } = useChat();
 
     const handleOpenModal = () => setIsModalOpen(true);
     const handleCloseModal = () => setIsModalOpen(false);
@@ -38,6 +41,8 @@ function ChatsPage() {
         console.log('Connected to server');
       });
 
+
+
       socket.on('roomJoined', (data: any) => {
         console.log('Data received:', data);
         if(data.roomId){
@@ -62,10 +67,77 @@ function ChatsPage() {
       socket.emit('joinRoom', { roomId });
     };
 
+    const handleJoinChatRoom = (invitation: any) => {
+      console.log("invitation", invitation)
+      if (!socket) {
+          console.error("Socket não está conectado.");
+          return;
+      }
+
+      socket.emit('acceptInvitation', invitation.invitationId);
+  
+      navigate(`/chatroom/${invitation.roomId}`, {state:{ ...invitation }});
+    };
+
+    const handleInvitationClick = (index: any) => {
+        setButtonPressedIndex(index);
+    };
+
+    useEffect(() => {
+      if (!socket) return;
+
+      const handleEnterChatRoom = (data: any) => {
+          console.log("----OOOOO----", data);
+      };
+
+      socket.on('newMemberJoined', handleEnterChatRoom);
+    
+      return () => {
+        socket.off('newMemberJoined', handleEnterChatRoom);
+      };
+    }, [socket]); 
+
+    useEffect(() => {
+      if (!socket) return;
+
+      const handleReceiveInvitation = (invitation: any) => {
+          console.log("here", invitation)
+          addInvitation(invitation);
+      };
+
+      socket.on('invitationReceived', handleReceiveInvitation);
+
+      console.log("invitation", invitations)
+
+      return () => {
+          socket.off('invitationReceived', handleReceiveInvitation);
+      };
+    }, [socket, addInvitation]); 
+
     return (
       <div>
         <Header onClick={handleOpenModal} isOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
         Chats
+        <div>Invitations received
+          {invitations.length > 0 ?
+          (
+          <ul>
+              {invitations.map((invitation, index) => (
+                  <div key={index}>
+                      <li onClick={() => handleInvitationClick(index)}>
+                          convite recebido para o chat {invitation.roomName}, convidado por {invitation.senderName}
+                      </li>
+                      {buttonPressedIndex === index && (
+                          <Button text="Entrar?" onClick={() => handleJoinChatRoom(invitation)}></Button>
+                      )}
+                  </div>
+              ))}
+          </ul>
+          )
+          :
+          (<></>)
+          }
+        </div>
         <Styles.ChatGrid>
           {rooms.map((chat: any, index: any) => ( // Use rooms from context
             <Stack direction="row" spacing={1} key={index} onClick={() => handleJoinChat(chat.roomId)}>
